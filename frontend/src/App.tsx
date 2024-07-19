@@ -1,15 +1,13 @@
 import './index.css'
 import { Outlet } from 'react-router-dom'
-import BottomNavBar from './components/container/BottomNavBar'
-import TopNavBar from './components/container/TopNavBar'
+import FullScreenModal from './components/pure/FullScreenModal'
 
 function App() {
 
   return (
-    <div className='flex relative'>
-      <TopNavBar />
+    <div className='min-h-full min-w-full'>
       <Outlet />
-      <BottomNavBar />
+      <FullScreenModal />
     </div>
   )
 }

@@ -11,14 +11,15 @@ const routes = [
     path: '/',
     element: <App />,
     children: [
-      { path: '/', element: <Navigate to='/home' /> },
-      { path: '/dashboard', element: <DashboardPage /> },
+      { path: '/', element: <Navigate to='/home' replace={true} /> },
+      { path: '/dashboard', element: <DashboardPage />, Children: [] },
+      { path: '/home', element: <HomePage /> },
+      { path: '/register', element: <RegisterPage /> },
+      { path: '/preference', element: <PreferencePage /> },
+      { path: '*', element: <NotFoundPage /> }
     ]
   },
-  { path: '/home', element: <HomePage /> },
-  { path: '/register', element: <RegisterPage /> },
-  { path: '/preference', element: <PreferencePage /> },
-  { path: '*', element: <NotFoundPage /> }
+  
 ]
 
 export default routes

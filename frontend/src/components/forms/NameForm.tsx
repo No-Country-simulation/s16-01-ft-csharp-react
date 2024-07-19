@@ -53,10 +53,10 @@ export default function NameForm(): JSX.Element {
                                                 type='text'
                                                 placeholder='Nombre'
                                                 label='Nombre'
-                                                size='lg'
+                                                size='md'
                                                 className="p-0"
                                                 containerProps={{
-                                                    className: 'max-w-[90%] items-center'
+                                                    className: 'items-center'
                                                 }}
                                             />
                                         )}
@@ -69,7 +69,7 @@ export default function NameForm(): JSX.Element {
                                         <div className='h-5' />
                                     )}
                             </CardBody>
-                            <CardFooter className='flex flex-row justify-center space-x-2' >
+                            <CardFooter className='flex flex-row justify-center space-x-2 p-0 pt-2' >
                                 <Button type='submit' color='white' className='border-[0.1rem] border-black py-3 px-10' >
                                     Button
                                 </Button>
