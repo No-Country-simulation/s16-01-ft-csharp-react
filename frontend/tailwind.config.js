@@ -9,6 +9,9 @@ export default withMT({
   theme: {
     extend: {},
   },
+  fontFamily: {
+    sans: ['Roboto']
+  },
   plugins: [],
 })
 
