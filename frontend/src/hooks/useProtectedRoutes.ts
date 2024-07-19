@@ -6,15 +6,14 @@ import { useEffect } from 'react'
  * Hook to redirect on Protected Routes
  */
 export default function useProtectedRoutes () {
-  const { useCheckRealUser, user } = useUserActions()
+  const { user } = useUserActions()
   const location = useLocation()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if ((location.pathname === '/login' || location.pathname === '/home') && useCheckRealUser(user)) {
+    if ((location.pathname === '/login' || location.pathname === '/home')) {
       navigate('/dashboard')
-    } else if (!(location.pathname === '/login' || location.pathname === '/home') &&
-      !useCheckRealUser(user)) {
+    } else if (!(location.pathname === '/login' || location.pathname === '/home')) {
       navigate('/login')
     }
   }, [user])
