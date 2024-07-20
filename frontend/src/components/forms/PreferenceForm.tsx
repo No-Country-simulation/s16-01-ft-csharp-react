@@ -154,9 +154,6 @@ export default function PreferenceForm(): JSX.Element {
                   </ErrorMessage>
                 ) : (
                   <div className='min-h-5 text-[0.5rem] pt-1'>
-                    <SpecificErrorMessage >
-                      Puede crear y presionar enter también
-                    </SpecificErrorMessage>
                   </div>
                 )}
                 <div className="flex flex-wrap gap-1 min-h-8 pb-2 pt-2" >
