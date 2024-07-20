@@ -4,16 +4,16 @@ import { useNavigate } from "react-router-dom";
 import * as Yup from 'yup';
 import { useState } from "react";
 import { SpecificErrorMessage } from "../pure/SpecificErrorMessage";
-import { useUserActions } from "../../hooks/useUserActions"
-
+import { useUserActions } from "../../hooks/useUserActions";
+import Plus from "../../assets/Plus";
 type CredentialsPreference = {
   preference: string[];
 };
 
 const preferenceSchema = Yup.object().shape({
   preference: Yup.array()
-    .of(Yup.string().max(20, 'Cada preferencia debe tener un máximo de 20 caracteres')) 
-    .max(10, 'No puede haber más de 10 preferencias') 
+    .of(Yup.string().max(20, 'Máximo de 20 caracteres')) 
+    .max(10, 'Máximo 10 preferencias') 
 });
 
 const initialCredentials: CredentialsPreference = {
@@ -53,7 +53,7 @@ export default function PreferenceForm(): JSX.Element {
         setFieldValue('preference', newPreferenceList, true);
       }
     } catch (error) {
-      setFieldError('preference', JSON.stringify(error));
+      setFieldError('preference', (error as Yup.ValidationError).errors.join(', '));
     }
     setSearchTerm("");
     setSuggestions([]);
@@ -107,7 +107,7 @@ export default function PreferenceForm(): JSX.Element {
                 </Typography>
                 <Field name='preference'>
                   {({ field }: { field: any }) => (
-                    <>
+                    <div className="relative flex items-center">
                       <Input
                         error={Boolean(errors.preference && touched.preference)}
                         color='black'
@@ -119,11 +119,19 @@ export default function PreferenceForm(): JSX.Element {
                         placeholder='Buscar'
                         label='Buscar'
                         size='md'
-                        className="p-0"
+                        className="p-0 w-full"
                         containerProps={{
-                          className: 'items-center'
+                          className: 'items-center relative'
                         }}
                       />
+                      <button
+                        type="button"
+                        className="absolute right-2"
+                        onClick={() => handleAddPreference(searchTerm, setFieldValue, setFieldError, values.preference)}
+                        disabled={!searchTerm}
+                      >
+                        <Plus />
+                      </button>
                       {suggestions.length > 0 && (
                         <div className="absolute z-10 bg-white border border-gray-300 w-full mt-1 rounded-lg shadow-lg">
                           {suggestions.map((suggestion, index) => (
@@ -137,7 +145,7 @@ export default function PreferenceForm(): JSX.Element {
                           ))}
                         </div>
                       )}
-                    </>
+                    </div>
                   )}
                 </Field>
                 {errors.preference && touched.preference ? (
@@ -145,15 +153,9 @@ export default function PreferenceForm(): JSX.Element {
                     {msg => <SpecificErrorMessage>{msg}</SpecificErrorMessage>}
                   </ErrorMessage>
                 ) : (
-                  <div className='min-h-15 text-[0.5rem] pt-1'>
+                  <div className='min-h-5 text-[0.5rem] pt-1'>
                     <SpecificErrorMessage >
-                      Puede escrbir y presionar enter también
-                    </SpecificErrorMessage>
-                    <SpecificErrorMessage >
-                      Maximo 20 caracteres
-                    </SpecificErrorMessage>
-                    <SpecificErrorMessage >
-                      Maximo 10 preferencias
+                      Puede crear y presionar enter también
                     </SpecificErrorMessage>
                   </div>
                 )}
