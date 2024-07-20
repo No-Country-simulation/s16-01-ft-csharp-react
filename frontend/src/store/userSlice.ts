@@ -6,7 +6,7 @@ const DEFAULT_STATE: User = {
   user_id: '',
   username: '',
   preference: [],
-  user_state: ''
+  user_state: { state: '', path: '', parameter: '' }
 }
 
 const initialState = (() => {

@@ -2,21 +2,23 @@ import { Button, Card, CardBody, CardFooter, Input, Typography } from "@material
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik"
 import { useNavigate } from "react-router-dom"
 import * as Yup from 'yup'
-import { Credentials } from "../../models/types.d"
+import { CredentialsUser } from "../../models/types.d"
 import { SpecificErrorMessage } from "../pure/SpecificErrorMessage"
+import { useUserActions } from "../../hooks/useUserActions"
 
 const loginSchema = Yup.object().shape({
-    username: Yup.string().length(20, 'Máximo 20 caracteres')
+    username: Yup.string().max(20, 'Máximo 20 caracteres')
         .required('El Nombre es obligatorio')
 })
 
-const initialCredentials: Credentials = {
+const initialCredentials: CredentialsUser = {
     username: ''
 }
 
 export default function NameForm(): JSX.Element {
+    const { user, useSetUser } = useUserActions()
     const navigate = useNavigate()
-    const handleSubmit = async (values: Credentials, { setSubmitting }: FormikHelpers<Credentials>) => {
+    const handleSubmit = async (values: CredentialsUser, { setSubmitting }: FormikHelpers<CredentialsUser>) => {
         /* try {
           const res = await login(values).unwrap()
           if (res) {
@@ -26,21 +28,22 @@ export default function NameForm(): JSX.Element {
           console.log(error)
         } */
         console.log(values)
+        useSetUser({...user, username: values.username})
         setSubmitting(false)
-        navigate('/dashboard')
+        navigate('/preference')
     }
 
     return (
-        <div className=''>
+        <div className='min-w-[90%]'>
             <Formik
                 initialValues={initialCredentials}
                 validationSchema={loginSchema}
                 onSubmit={handleSubmit}
             >
                 {({ touched, errors }) => (
-                    <Form className=''>
-                        <Card className='w-90%' shadow={false} >
-                            <CardBody className='p-0' >
+                    <Form>
+                        <Card className='' shadow={false} >
+                            <CardBody className='p-0 ' >
                                 <Typography variant="h5" color="black" className="py-3 text-start">
                                     ¿Nos dirías tu nombre?
                                 </Typography>
@@ -70,11 +73,8 @@ export default function NameForm(): JSX.Element {
                                     )}
                             </CardBody>
                             <CardFooter className='flex flex-row justify-center space-x-2 p-0 pt-2' >
-                                <Button type='submit' color='white' className='border-[0.1rem] border-black py-3 px-10' >
-                                    Button
-                                </Button>
-                                <Button type='submit' color='black' className='py-3 px-10'>
-                                    Button
+                                <Button type='submit' fullWidth color='black' className='py-3 px-10'>
+                                    CONTINUAR
                                 </Button>
                             </CardFooter>
                         </Card>
