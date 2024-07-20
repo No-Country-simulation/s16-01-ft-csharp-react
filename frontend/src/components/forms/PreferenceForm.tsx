@@ -12,7 +12,8 @@ type CredentialsPreference = {
 
 const preferenceSchema = Yup.object().shape({
   preference: Yup.array()
-    .of(Yup.string().max(20, 'Máximo 20 caracteres'))
+    .of(Yup.string().max(20, 'Cada preferencia debe tener un máximo de 20 caracteres')) 
+    .max(10, 'No puede haber más de 10 preferencias') 
 });
 
 const initialCredentials: CredentialsPreference = {
@@ -144,12 +145,15 @@ export default function PreferenceForm(): JSX.Element {
                     {msg => <SpecificErrorMessage>{msg}</SpecificErrorMessage>}
                   </ErrorMessage>
                 ) : (
-                  <div className='h-5 text-[0.5rem]'>
+                  <div className='min-h-15 text-[0.5rem] pt-1'>
                     <SpecificErrorMessage >
                       Puede escrbir y presionar enter también
                     </SpecificErrorMessage>
                     <SpecificErrorMessage >
                       Maximo 20 caracteres
+                    </SpecificErrorMessage>
+                    <SpecificErrorMessage >
+                      Maximo 10 preferencias
                     </SpecificErrorMessage>
                   </div>
                 )}
