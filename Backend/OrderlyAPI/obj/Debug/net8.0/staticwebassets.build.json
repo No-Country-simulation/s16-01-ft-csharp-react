@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "YI6yIZRSjg5CIiFFVvKm/rEFbA6Y2kpGeBFPkApbbNo=",
+  "Source": "OrderlyAPI",
+  "BasePath": "_content/OrderlyAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
