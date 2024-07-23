@@ -12,7 +12,7 @@ type CredentialsPreference = {
 
 const preferenceSchema = Yup.object().shape({
   preference: Yup.array()
-    .of(Yup.string().max(20, 'Máximo de 20 caracteres')) 
+    .of(Yup.string().max(20, 'Máximo 20 caracteres')) 
     .max(10, 'Máximo 10 preferencias') 
 });
 
@@ -137,7 +137,7 @@ export default function PreferenceForm(): JSX.Element {
                           {suggestions.map((suggestion, index) => (
                             <div
                               key={index}
-                              className="p-2 cursor-pointer hover:bg-gray-200"
+                              className="p-2 cursor-pointer hover:bg-gray-200 text-black"
                               onClick={() => handleAddPreference(suggestion, setFieldValue, setFieldError, values.preference)}
                             >
                               {suggestion}

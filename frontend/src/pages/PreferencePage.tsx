@@ -8,7 +8,7 @@ export default function PreferencePage() {
     <div className="w-full flex flex-col items-center min-h-screen">
       <div className="w-full h-full flex flex-col items-center min-h-screen">
         <div className="flex flex-col items-start w-full px-8 pt-8">
-          <img className="size-[35%] pt-20 pb-[5rem]" src={LogoTextSM} />
+          <img className="min-h-[1.95rem] pt-20 pb-[5rem]" src={LogoTextSM} />
           <GreetingsWithTime/>
           <Typography variant="h2" color="black" className="pt-10 pb-10 text-start text-[1.2rem]">
             ¿Nos quieres compartir alguna restricción alimenticia que tengas?
