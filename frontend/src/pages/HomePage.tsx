@@ -23,9 +23,9 @@ export default function HomePage() {
       <div className="min-w-[20.5rem] min-h-full flex flex-col justify-start pt-5 pb-5">
         <Typography variant="h6" className="pb-1">Los mas recomendados</Typography>
         <div className="min-h-[9.25rem] min-w-full bg-black"></div>
-        <div className="flex pt-1">
-            <Typography variant="h6" className="pt-2">Nombre del Producto</Typography>
-            <Typography variant="small" className="text-blue-gray-500">Mas detalles</Typography>
+        <div className="flex flex-col pt-2">
+          <Typography variant="h6">Nombre del Producto</Typography>
+          <Typography variant="small" className="text-blue-gray-500">Mas detalles</Typography>
         </div>
       </div>
     </div>
