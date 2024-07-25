@@ -15,9 +15,9 @@ export default function AboutPage() {
       <Link to="/register" className="text-blue-600 p-4">Register</Link>
       <Link to="/preference" className="text-blue-600 p-4">Preference</Link>
       <Link to="/home" className="text-blue-600 p-4">Home</Link>
-      <Button onClick={() => handleWith({state: 'Loading', path: '/register', parameter: ''})}>Open Modal Loading</Button>
-      <Button onClick={() => handleWith({state: 'Completed', path: '/register', parameter: ''})}>Open Modal Completed</Button>
-      <Button onClick={() => handleWith({state: 'Error', path: '/register', parameter: ''})}>Open Modal Error</Button>
+      <Button onClick={() => handleWith({state: 'Loading', path: '/register', parameter: '', message: '' })}>Open Modal Loading</Button>
+      <Button onClick={() => handleWith({state: 'Completed', path: '/register', parameter: '', message: '' })}>Open Modal Completed</Button>
+      <Button onClick={() => handleWith({state: 'Error', path: '/register', parameter: '', message: '' })}>Open Modal Error</Button>
     </div>
   )
 }
