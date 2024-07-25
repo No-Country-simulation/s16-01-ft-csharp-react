@@ -34,7 +34,7 @@ export default function NameForm(): JSX.Element {
     }
 
     return (
-        <div className='min-w-[90%]'>
+        <div className='place-content-center min-w-[90%]'>
             <Formik
                 initialValues={initialCredentials}
                 validationSchema={loginSchema}
@@ -72,7 +72,7 @@ export default function NameForm(): JSX.Element {
                                         <div className='h-5' />
                                     )}
                             </CardBody>
-                            <CardFooter className='flex flex-row justify-center space-x-2 p-0 pt-2' >
+                            <CardFooter className='flex flex-row justify-center space-x-2 p-0 pt-1 pb-20' >
                                 <Button type='submit' fullWidth color='black' className='py-3 px-10'>
                                     CONTINUAR
                                 </Button>

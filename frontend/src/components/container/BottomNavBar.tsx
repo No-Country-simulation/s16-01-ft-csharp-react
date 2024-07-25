@@ -1,8 +1,8 @@
 import { IconButton, Navbar, Typography } from "@material-tailwind/react";
-import Home from '../../assets/home.svg';
-import Menu from '../../assets/menu.svg';
-import ShoppingCart from '../../assets/shopping-cart.svg';
 import { Link, useLocation } from "react-router-dom";
+import HomeButton from "../../assets/HomeButton";
+import ShoppingCartButton from "../../assets/ShoppingCartButton";
+import MenuButton from "../../assets/MenuButton";
 
 export default function BottomNavBar() {
   const location = useLocation();
@@ -13,7 +13,7 @@ export default function BottomNavBar() {
       <div className="flex flex-col items-center">
         <Link to='/home'>
           <IconButton variant="text" className={`bg-white rounded-full ${isActive('/home') ? 'bg-gray-900/20' : '' }`}>
-            <img src={Home} />
+            <HomeButton />
           </IconButton>
         </Link>
         <Typography variant="small" className={`text-[0.63rem] font-medium`}>
@@ -23,7 +23,7 @@ export default function BottomNavBar() {
       <div className="flex flex-col items-center">
         <Link to='/menu'>
           <IconButton variant="text" className={`bg-white rounded-full ${isActive('/menu') ? 'bg-gray-900/20' : ''}`}>
-            <img src={Menu} />
+            <MenuButton />
           </IconButton>
         </Link>
         <Typography variant="small" className={`text-[0.63rem] font-medium`}>
@@ -33,7 +33,7 @@ export default function BottomNavBar() {
       <div className="flex flex-col items-center">
         <Link to='/consumption'>
           <IconButton variant="text" className={`bg-white rounded-full ${isActive('/consumption') ? 'bg-gray-900/20' : ''}`}>
-            <img src={ShoppingCart} />
+            <ShoppingCartButton />
           </IconButton>
         </Link>
         <Typography variant="small" className={`text-[0.63rem] font-medium`}>

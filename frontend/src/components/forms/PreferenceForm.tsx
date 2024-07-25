@@ -7,20 +7,33 @@ import { SpecificErrorMessage } from "../pure/SpecificErrorMessage";
 import { useUserActions } from "../../hooks/useUserActions";
 import Plus from "../../assets/Plus";
 type CredentialsPreference = {
-  preference: string[];
+  preferences: string[];
 };
 
 const preferenceSchema = Yup.object().shape({
-  preference: Yup.array()
+  preferences: Yup.array()
     .of(Yup.string().max(20, 'Máximo 20 caracteres')) 
     .max(10, 'Máximo 10 preferencias') 
 });
 
 const initialCredentials: CredentialsPreference = {
-  preference: []
+  preferences: []
 };
 
-const restrictions = ["No Maní", "No Azúcar", "No Gluten", "No Lactosa", "No Soja"];
+const restrictions = [
+  "Gluten",
+  "Lactosa",
+  "Azúcar",
+  "Huevo",
+  "Carne de vacuno",
+  "Pescado",
+  "Mariscos",
+  "Nueces",
+  "Almendras",
+  "Maní",
+  "Soya",
+  "Sésamo"
+];
 
 export default function PreferenceForm(): JSX.Element {
   const { user, useSetUser } = useUserActions();
@@ -41,35 +54,35 @@ export default function PreferenceForm(): JSX.Element {
   };
 
   const handleAddPreference = (
-    preference: string,
+    preferences: string,
     setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
     setFieldError: (field: string, message: string) => void,
     prefer_list: string[]
   ) => {
     try {
-      const newPreferenceList = [...prefer_list, preference];
-      preferenceSchema.validateSync({ preference: newPreferenceList });
-      if (!prefer_list.includes(preference)) {
-        setFieldValue('preference', newPreferenceList, true);
+      const newPreferenceList = [...prefer_list, preferences];
+      preferenceSchema.validateSync({ preferences: newPreferenceList });
+      if (!prefer_list.includes(preferences)) {
+        setFieldValue('preferences', newPreferenceList, true);
       }
     } catch (error) {
-      setFieldError('preference', (error as Yup.ValidationError).errors.join(', '));
+      setFieldError('preferences', (error as Yup.ValidationError).errors.join(', '));
     }
     setSearchTerm("");
     setSuggestions([]);
   };
 
   const handleRemovePreference = (
-    preference: string,
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
+    preferences: string,
+    setFieldValue: (field: string, value: string[], shouldValidate?: boolean | undefined) => void,
     prefer_list: string[]
   ) => {
-    setFieldValue('preference', prefer_list.filter((value) => value !== preference));
+    setFieldValue('preferences', prefer_list.filter((value) => value !== preferences));
   };
 
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLInputElement>,
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
+    setFieldValue: (field: string, value: string[], shouldValidate?: boolean | undefined) => void,
     setFieldError: (field: string, message: string) => void,
     prefer_list: string[]
   ) => {
@@ -81,18 +94,18 @@ export default function PreferenceForm(): JSX.Element {
 
   const handleSubmit = async (values: CredentialsPreference, { setSubmitting }: FormikHelpers<CredentialsPreference>) => {
     console.log(values);
-    useSetUser({ ...user, preference: values.preference });
+    useSetUser({ ...user, preferences: values.preferences });
     setSubmitting(false);
-    navigate('/dashboard');
+    navigate('/home');
   };
 
   const handleSkip = () => {
-    useSetUser({ ...user, preference: [] });
-    navigate('/dashboard');
+    useSetUser({ ...user, preferences: [] });
+    navigate('/home');
   };
 
   return (
-    <div className='px-8'>
+    <div className='place-content-center min-w-[90%]'>
       <Formik
         initialValues={initialCredentials}
         validationSchema={preferenceSchema}
@@ -103,18 +116,18 @@ export default function PreferenceForm(): JSX.Element {
             <Card className='' shadow={false}>
               <CardBody className='p-0'>
                 <Typography variant="h6" color="gray" className="py-1 text-start">
-                  Selecciona qué tipo
+                  Selecciona el ingrediente
                 </Typography>
-                <Field name='preference'>
+                <Field name='preferences'>
                   {({ field }: { field: any }) => (
                     <div className="relative flex items-center">
                       <Input
-                        error={Boolean(errors.preference && touched.preference)}
+                        error={Boolean(errors.preferences && touched.preferences)}
                         color='black'
                         {...field}
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        onKeyDown={(event) => handleKeyDown(event, setFieldValue, setFieldError, values.preference)}
+                        onKeyDown={(event) => handleKeyDown(event, setFieldValue, setFieldError, values.preferences)}
                         type='text'
                         placeholder='Buscar'
                         label='Buscar'
@@ -127,7 +140,7 @@ export default function PreferenceForm(): JSX.Element {
                       <button
                         type="button"
                         className="absolute right-2"
-                        onClick={() => handleAddPreference(searchTerm, setFieldValue, setFieldError, values.preference)}
+                        onClick={() => handleAddPreference(searchTerm, setFieldValue, setFieldError, values.preferences)}
                         disabled={!searchTerm}
                       >
                         <Plus />
@@ -138,7 +151,7 @@ export default function PreferenceForm(): JSX.Element {
                             <div
                               key={index}
                               className="p-2 cursor-pointer hover:bg-gray-200 text-black"
-                              onClick={() => handleAddPreference(suggestion, setFieldValue, setFieldError, values.preference)}
+                              onClick={() => handleAddPreference(suggestion, setFieldValue, setFieldError, values.preferences)}
                             >
                               {suggestion}
                             </div>
@@ -148,8 +161,8 @@ export default function PreferenceForm(): JSX.Element {
                     </div>
                   )}
                 </Field>
-                {errors.preference && touched.preference ? (
-                  <ErrorMessage className='h-5 text-[0.8rem] text-start pl-1 text-black' name='preference'>
+                {errors.preferences && touched.preferences ? (
+                  <ErrorMessage className='h-5 text-[0.8rem] text-start pl-1 text-black' name='preferences'>
                     {msg => <SpecificErrorMessage>{msg}</SpecificErrorMessage>}
                   </ErrorMessage>
                 ) : (
@@ -157,11 +170,11 @@ export default function PreferenceForm(): JSX.Element {
                   </div>
                 )}
                 <div className="flex flex-wrap gap-1 min-h-8 pb-2 pt-2" >
-                  {values.preference && values.preference.map((valor, index) => (
+                  {values.preferences && values.preferences.map((valor, index) => (
                     <Chip 
                       key={index} 
                       value={valor} 
-                      onClose={() => handleRemovePreference(valor, setFieldValue, values.preference)} 
+                      onClose={() => handleRemovePreference(valor, setFieldValue, values.preferences)} 
                       animate={{
                         mount: { y: 0 },
                         unmount: { y: 20 },
@@ -172,7 +185,7 @@ export default function PreferenceForm(): JSX.Element {
                   ))}
                 </div>
               </CardBody>
-              <CardFooter className='flex flex-row justify-center space-x-2 p-0 pt-2'>
+              <CardFooter className='flex flex-row justify-center space-x-2 p-0 pt-10 pb-20'>
                 <Button onClick={handleSkip} color='white' className='border-[0.1rem] border-black py-3 px-10'>
                   OMITIR
                 </Button>

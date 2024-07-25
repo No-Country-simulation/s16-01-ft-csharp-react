@@ -5,8 +5,8 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 const DEFAULT_STATE: User = {
   user_id: '',
   username: '',
-  preference: [],
-  user_state: { state: '', path: '', parameter: '' }
+  preferences: [],
+  user_state: { state: '', path: '', parameter: '', message: '' }
 }
 
 const initialState = (() => {
