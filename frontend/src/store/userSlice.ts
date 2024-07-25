@@ -19,7 +19,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
-      return { ...state, ...action.payload }
+      return { ...action.payload }
     },
     resetUser: () => {
       return DEFAULT_STATE
