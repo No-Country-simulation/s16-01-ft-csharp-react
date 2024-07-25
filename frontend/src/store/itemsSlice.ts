@@ -13,8 +13,8 @@ export const itemsSlice = createSlice({
   name: 'items',
   initialState,
   reducers: {
-    initItems: (state, action: PayloadAction<Item[]>) => {
-      return [...state, ...action.payload]
+    initItems: (_state, action: PayloadAction<Item[]>) => {
+      return [...action.payload]
     },
     addItem: (state, action: PayloadAction<Item>) => {
       return [...state, { ...action.payload }]
