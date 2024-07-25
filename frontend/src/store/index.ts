@@ -3,10 +3,10 @@ import userReducer from './userSlice'
 import itemsReducer from './itemsSlice'
 import { apiSlice } from './apiSlice'
 
-/* const persistanceLocalStorageMiddleware = (store) => (next) => (action) => {
+const persistanceLocalStorageMiddleware = (store: any) => (next: any) => (action: any) => {
   next(action)
   window.localStorage.setItem('session_state', JSON.stringify(store.getState()))
-} */
+}
 
 export const store = configureStore({
   reducer: {
@@ -15,7 +15,7 @@ export const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(apiSlice.middleware)/* .concat(persistanceLocalStorageMiddleware) */
+    getDefaultMiddleware().concat(apiSlice.middleware).concat(persistanceLocalStorageMiddleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>
