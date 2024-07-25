@@ -27,18 +27,15 @@ export default function MenuPage() {
   const getFilteredItems = () => {
     return items
       .filter(item =>
-        item.category === category &&
+        (item.category === category) &&
         (item.name.toLowerCase().includes(filter.toLowerCase()) ||
           item.description.toLowerCase().includes(filter.toLowerCase()) ||
-          item.keywords.some(keyword => keyword.toLowerCase().includes(filter.toLowerCase())))
-      )
-      .filter(item =>
-        !user.preferences.some((preference: string) =>
+          item.keywords.some(keyword => keyword.toLowerCase().includes(filter.toLowerCase()))) &&
+        ( !user.preferences.some((preference: string) =>
           item.name.toLowerCase().includes(preference.toLowerCase()) ||
           item.description.toLowerCase().includes(preference.toLowerCase()) ||
-          item.keywords.some(keyword => keyword.toLowerCase().includes(preference.toLowerCase()))
-        )
-      );
+          item.keywords.some(keyword => keyword.toLowerCase().includes(preference.toLowerCase()))))
+      )
     };
 
   const deletePreference = (preference: string) => {
@@ -78,28 +75,27 @@ export default function MenuPage() {
       <div className="flex flex-col min-w-[90%] items-center place-content-center">
         <div className="min-w-full flex flex-col gap-5">
           {getFilteredItems().map((item, index) => (
-            
-              <Card key={index} className="">
-                <Link to={`/product/`.concat(item.item_id)} >
-                <CardBody className="pb-2">
-                  <div className="pb-3 flex justify-between">
-                    <div className="">
-                      <Typography variant="h6" className="font-semibold text-black">{item.name}</Typography>
-                      <Typography variant="small" className="font-medium">Para {item.portion} persona(s)</Typography>
-                    </div>
-                    <Typography variant="h5" className="text-black">${item.price.toFixed(2)}</Typography>
+            <Card key={index} className="">
+              <Link to={`/product/`.concat(item.item_id)} >
+              <CardBody className="pb-2">
+                <div className="pb-3 flex justify-between">
+                  <div className="">
+                    <Typography variant="h6" className="font-semibold text-black">{item.name}</Typography>
+                    <Typography variant="small" className="font-medium">Para {item.portion} persona(s)</Typography>
                   </div>
-                  <Typography variant="small">{item.description}</Typography>
-                </CardBody>
-                <CardFooter className="flex gap-4 pt-0">
-                  {item.keywords.map((keyword, index) => (
-                    <div key={index} className="flex items-center gap-[0.1rem]">
-                      <CheckBadge/><Typography variant="small" className="capitalize">{keyword}</Typography>
-                    </div>
-                  ))}
-                </CardFooter>
-                </Link>
-              </Card>
+                  <Typography variant="h5" className="text-black">${item.price.toFixed(2)}</Typography>
+                </div>
+                <Typography variant="small">{item.description}</Typography>
+              </CardBody>
+              <CardFooter className="flex gap-4 pt-0">
+                {item.keywords.map((keyword, index) => (
+                  <div key={index} className="flex items-center gap-[0.1rem]">
+                    <CheckBadge/><Typography variant="small" className="capitalize">{keyword}</Typography>
+                  </div>
+                ))}
+              </CardFooter>
+              </Link>
+            </Card>
           ))}
         </div>
       </div>
