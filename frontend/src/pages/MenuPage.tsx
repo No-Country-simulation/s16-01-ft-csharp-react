@@ -9,7 +9,7 @@ import CheckBadge from "../assets/CheckBadge";
 import { Link } from "react-router-dom";
 
 export default function MenuPage() {
-  const { items,  } = useItemsActions();
+  const { items  } = useItemsActions();
   const { user, useSetUser } = useUserActions();
   const [filter, setFilter] = useState<string>("");
   const [category, setCategory] = useState<string>("Platos");
@@ -55,13 +55,13 @@ export default function MenuPage() {
         <SettingsButton />
       </div>
       <div className="min-w-[90%] flex pt-4 gap-2 pb-6">
-        {user.preferences.map((item: string, index: number) => (
+        {user.preferences.map((preference: string, index: number) => (
           <Chip key={index} variant="outlined" 
             icon={
-              <Button onClick={() => deletePreference(item)} variant="text" className="p-0 rounded-none bg-white text-black">
+              <Button onClick={() => deletePreference(preference)} variant="text" className="p-0 rounded-none bg-white text-black">
                 <XMark />
               </Button>
-          } value={item} 
+          } value={preference} 
             className="capitalize"
           />
         ))}
@@ -78,33 +78,31 @@ export default function MenuPage() {
       <div className="flex flex-col min-w-[90%] items-center place-content-center">
         <div className="min-w-full flex flex-col gap-5">
           {getFilteredItems().map((item, index) => (
-            <Link to={`contacts/` + item.item_id} >
+            
               <Card key={index} className="">
+                <Link to={`/product/`.concat(item.item_id)} >
                 <CardBody className="pb-2">
                   <div className="pb-3 flex justify-between">
                     <div className="">
                       <Typography variant="h6" className="font-semibold text-black">{item.name}</Typography>
                       <Typography variant="small" className="font-medium">Para {item.portion} persona(s)</Typography>
                     </div>
-                    <Typography variant="h5" className="text-black">${item.price}</Typography>
+                    <Typography variant="h5" className="text-black">${item.price.toFixed(2)}</Typography>
                   </div>
                   <Typography variant="small">{item.description}</Typography>
                 </CardBody>
                 <CardFooter className="flex gap-4 pt-0">
-                  {item.keywords.map((item, index) => (
+                  {item.keywords.map((keyword, index) => (
                     <div key={index} className="flex items-center gap-[0.1rem]">
-                      <CheckBadge/><Typography variant="small" className="capitalize">{item}</Typography>
+                      <CheckBadge/><Typography variant="small" className="capitalize">{keyword}</Typography>
                     </div>
                   ))}
                 </CardFooter>
+                </Link>
               </Card>
-            </Link>
-            
           ))}
         </div>
-        
       </div>
-      
     </div>
   );
 }

@@ -8,7 +8,7 @@ export default function TopNavBar() {
   const location = useLocation()
   const navigate = useNavigate()
   const goToBack = () => {
-    if(location.pathname === '/menu' || location.pathname === '/product' ) {
+    if(location.pathname === '/menu' || location.pathname.startsWith('/product') ) {
       return  <Button 
                 variant='text' 
                 className='flex gap-4 items-center place-content-center p-0 px-2'
@@ -16,6 +16,15 @@ export default function TopNavBar() {
                 >
                 <ArrowLeft />
                 <Typography variant='h6' className='capitalize'>Carta</Typography>
+              </Button>
+    } else if(location.pathname === '/consumption') {
+      return  <Button 
+                variant='text' 
+                className='flex gap-4 items-center place-content-center p-0 px-2'
+                onClick={() => navigate(-1)}
+                >
+                <ArrowLeft />
+                <Typography variant='h6' className='capitalize'>Consumos</Typography>
               </Button>
     } else {
       return <img src={LogoMD} className='h-[2rem]' />
