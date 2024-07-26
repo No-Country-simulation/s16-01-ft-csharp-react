@@ -1,6 +1,6 @@
 import './index.css'
 import { Outlet } from 'react-router-dom'
-import FullScreenModal from './components/pure/FullScreenModal'
+import FullScreenModal from './components/container/FullScreenModal'
 
 function App() {
 

@@ -2,7 +2,8 @@ export interface User {
     user_id: string,
     username: string,
     preferences: string[],
-    user_state?: UserState
+    user_state?: UserState,
+    order_list?: Order[]
 }
 
 export interface UserState {
@@ -10,6 +11,20 @@ export interface UserState {
     path: string,
     parameter: string,
     message: string
+}
+
+export interface Order {
+    order_id: string,
+    item_id: string,
+    quantity: number,
+    order_status: OrderStatus
+}
+
+export enum OrderStatus {
+    'selected' = 0,
+    'sent' = 1,
+    'processing' = 2,
+    'received' = 3
 }
 
 export interface CredentialsUser {

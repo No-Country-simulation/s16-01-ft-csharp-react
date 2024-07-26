@@ -2,8 +2,8 @@ import { Dialog, Spinner } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useUserActions } from '../../hooks/useUserActions';
 import { useNavigate } from 'react-router-dom';
-import CheckAnimation from './CheckAnimation';
-import ErrorAnimation from './ErrorAnimation';
+import CheckAnimation from '../pure/CheckAnimation';
+import ErrorAnimation from '../pure/ErrorAnimation';
 
 const FullScreenModal: React.FC = () => {
   const { user, useSetUser } = useUserActions();

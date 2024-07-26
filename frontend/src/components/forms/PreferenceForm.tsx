@@ -93,7 +93,6 @@ export default function PreferenceForm(): JSX.Element {
   };
 
   const handleSubmit = async (values: CredentialsPreference, { setSubmitting }: FormikHelpers<CredentialsPreference>) => {
-    console.log(values);
     useSetUser({ ...user, preferences: values.preferences });
     setSubmitting(false);
     navigate('/home');

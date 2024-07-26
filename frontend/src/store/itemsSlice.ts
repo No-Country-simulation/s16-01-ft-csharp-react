@@ -3,10 +3,26 @@ import type { Item, NewItem } from '../models/types.d'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 const DEFAULT_STATE: Item[] = []
+export const DEFAULT_ITEM: Item = { 
+  item_id: '',
+  name: '',
+  price: 0,
+  description: '',
+  category: '',
+  keywords: [''],
+  portion: 0,
+  nutritional_value: 0,
+  prep_time: 0,
+  max_queries: 0,
+  image_url: ''}
+
+const isValidUserState = (state: any): state is Item => {
+  return Object.keys(DEFAULT_STATE).every(key => key in state);
+};
 
 const initialState: Item[] = (() => {
   const persistedState = window.localStorage.getItem('session_state')
-  return persistedState ? JSON.parse(persistedState).items : DEFAULT_STATE
+  return persistedState ? (isValidUserState(JSON.parse(persistedState).items) ? JSON.parse(persistedState).items: DEFAULT_STATE) : DEFAULT_STATE
 })()
 
 export const itemsSlice = createSlice({

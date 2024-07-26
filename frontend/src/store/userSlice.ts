@@ -1,17 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { User } from '../models/types.d'
+import { Order, User, UserState } from '../models/types.d'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 const DEFAULT_STATE: User = {
   user_id: '',
   username: '',
   preferences: [],
-  user_state: { state: '', path: '', parameter: '', message: '' }
+  user_state: { state: '', path: '', parameter: '', message: '' },
+  order_list: []
 }
+
+const isValidUserState = (state: any): state is User => {
+  return Object.keys(DEFAULT_STATE).every(key => key in state);
+};
 
 const initialState = (() => {
   const persistedState = window.localStorage.getItem('session_state')
-  return persistedState ? JSON.parse(persistedState).user : DEFAULT_STATE
+  return persistedState ? (isValidUserState(JSON.parse(persistedState).user) ? JSON.parse(persistedState).user: DEFAULT_STATE) : DEFAULT_STATE
 })()
 
 export const userSlice = createSlice({
@@ -21,6 +26,12 @@ export const userSlice = createSlice({
     setUser: (_state, action: PayloadAction<User>) => {
       return {...action.payload }
     },
+    setUserState: (state, action: PayloadAction<UserState>) => {
+      return {...state, user_state: { ...action.payload} }
+    },
+    setUserOrderList: (state, action: PayloadAction<Order[]>) => {
+      return {...state, order_list: [...action.payload] }
+    },
     resetUser: () => {
       return DEFAULT_STATE
     }
@@ -28,4 +39,4 @@ export const userSlice = createSlice({
 })
 
 export default userSlice.reducer
-export const { resetUser, setUser } = userSlice.actions
+export const { resetUser, setUser, setUserState, setUserOrderList } = userSlice.actions

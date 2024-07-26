@@ -31,7 +31,7 @@ export default function GreetingsWithTime() {
     <div className='flex items-center'>
       <div>
         <Typography variant='h3' color='black' >{ greeting }</Typography>
-        <Typography variant='h3'>{ user.username || 'Name' }</Typography>
+        <Typography variant='h3'>{ user?.username }</Typography>
       </div>
     </div>
   )

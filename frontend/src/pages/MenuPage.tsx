@@ -31,7 +31,7 @@ export default function MenuPage() {
         (item.name.toLowerCase().includes(filter.toLowerCase()) ||
           item.description.toLowerCase().includes(filter.toLowerCase()) ||
           item.keywords.some(keyword => keyword.toLowerCase().includes(filter.toLowerCase()))) &&
-        ( !user.preferences.some((preference: string) =>
+        (!user.preferences.some((preference: string) =>
           item.name.toLowerCase().includes(preference.toLowerCase()) ||
           item.description.toLowerCase().includes(preference.toLowerCase()) ||
           item.keywords.some(keyword => keyword.toLowerCase().includes(preference.toLowerCase()))))
@@ -81,15 +81,15 @@ export default function MenuPage() {
                 <div className="pb-3 flex justify-between">
                   <div className="">
                     <Typography variant="h6" className="font-semibold text-black">{item.name}</Typography>
-                    <Typography variant="small" className="font-medium">Para {item.portion} persona(s)</Typography>
+                    <Typography variant="small" className="font-medium text-blue-gray-500">Para {item.portion} persona(s)</Typography>
                   </div>
                   <Typography variant="h5" className="text-black">${item.price.toFixed(2)}</Typography>
                 </div>
-                <Typography variant="small">{item.description}</Typography>
+                <Typography variant="small" className="text-[#607D8B]">{item.description}</Typography>
               </CardBody>
               <CardFooter className="flex gap-4 pt-0">
                 {item.keywords.map((keyword, index) => (
-                  <div key={index} className="flex items-center gap-[0.1rem]">
+                  <div key={index} className="flex items-center gap-[0.2rem]">
                     <CheckBadge/><Typography variant="small" className="capitalize">{keyword}</Typography>
                   </div>
                 ))}

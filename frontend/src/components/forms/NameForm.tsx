@@ -27,7 +27,6 @@ export default function NameForm(): JSX.Element {
         } catch (error) {
           console.log(error)
         } */
-        console.log(values)
         useSetUser({...user, username: values.username})
         setSubmitting(false)
         navigate('/preference')
