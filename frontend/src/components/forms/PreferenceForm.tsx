@@ -1,24 +1,17 @@
 import { Button, Card, CardBody, CardFooter, Input, Typography, Chip } from "@material-tailwind/react";
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as Yup from 'yup';
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SpecificErrorMessage } from "../pure/SpecificErrorMessage";
 import { useUserActions } from "../../hooks/useUserActions";
 import Plus from "../../assets/Plus";
-type CredentialsPreference = {
-  preferences: string[];
-};
+import type { CredentialsPreference } from "../../models/types.d";
 
-const preferenceSchema = Yup.object().shape({
-  preferences: Yup.array()
-    .of(Yup.string().max(20, 'Máximo 20 caracteres')) 
-    .max(10, 'Máximo 10 preferencias') 
-});
-
-const initialCredentials: CredentialsPreference = {
-  preferences: []
-};
+interface PreferenceFormProps {
+  father: string;
+  handleOpen?: () => void;
+}
 
 const restrictions = [
   "Gluten",
@@ -35,27 +28,48 @@ const restrictions = [
   "Sésamo"
 ];
 
-export default function PreferenceForm(): JSX.Element {
+export const PreferenceForm: React.FC<PreferenceFormProps> = ({ father, handleOpen }) => {
   const { user, useSetUser } = useUserActions();
+  const location = useLocation()
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const inputRef = useRef<HTMLDivElement>(null);
+
+  const preferenceSchema = Yup.object().shape({
+    preferences: Yup.array()
+      .of(Yup.string().max(20, 'Máximo 20 caracteres')) 
+      .max(10, 'Máximo 10 preferencias') 
+  });
+  
+  const initialCredentials: CredentialsPreference = {
+    preferences: user.preferences.length > 0 ? user.preferences : []
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+        setSuggestions([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
-    if (value) {
-      setSuggestions(restrictions.filter(restriction =>
-        restriction.toLowerCase().includes(value.toLowerCase())
-      ));
-    } else {
-      setSuggestions([]);
-    }
+    setSuggestions(
+      value ? restrictions.filter(restriction => restriction.toLowerCase().includes(value.toLowerCase())) : []
+    );
   };
 
   const handleAddPreference = (
     preferences: string,
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void,
     setFieldError: (field: string, message: string) => void,
     prefer_list: string[]
   ) => {
@@ -74,15 +88,15 @@ export default function PreferenceForm(): JSX.Element {
 
   const handleRemovePreference = (
     preferences: string,
-    setFieldValue: (field: string, value: string[], shouldValidate?: boolean | undefined) => void,
+    setFieldValue: (field: string, value: string[], shouldValidate?: boolean) => void,
     prefer_list: string[]
   ) => {
-    setFieldValue('preferences', prefer_list.filter((value) => value !== preferences));
+    setFieldValue('preferences', prefer_list.filter(value => value !== preferences));
   };
 
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLInputElement>,
-    setFieldValue: (field: string, value: string[], shouldValidate?: boolean | undefined) => void,
+    setFieldValue: (field: string, value: string[], shouldValidate?: boolean) => void,
     setFieldError: (field: string, message: string) => void,
     prefer_list: string[]
   ) => {
@@ -95,12 +109,19 @@ export default function PreferenceForm(): JSX.Element {
   const handleSubmit = async (values: CredentialsPreference, { setSubmitting }: FormikHelpers<CredentialsPreference>) => {
     useSetUser({ ...user, preferences: values.preferences });
     setSubmitting(false);
-    navigate('/home');
+    if (father === 'modal' && handleOpen) {
+      handleOpen();
+    } else if (location.pathname === '/preference' && father === 'page') {
+      navigate('/home');
+    }
   };
 
   const handleSkip = () => {
-    useSetUser({ ...user, preferences: [] });
-    navigate('/home');
+    if (father === 'modal' && handleOpen) {
+      handleOpen();
+    } else if (location.pathname === '/preference' && father === 'page') {
+      navigate('/home');
+    }
   };
 
   return (
@@ -111,21 +132,22 @@ export default function PreferenceForm(): JSX.Element {
         onSubmit={handleSubmit}
       >
         {({ touched, errors, values, setFieldValue, setFieldError }) => (
-          <Form className=''>
-            <Card className='' shadow={false}>
+          <Form>
+            <Card shadow={false}>
               <CardBody className='p-0'>
                 <Typography variant="h6" color="gray" className="py-1 text-start">
                   Selecciona el ingrediente
                 </Typography>
                 <Field name='preferences'>
                   {({ field }: { field: any }) => (
-                    <div className="relative flex items-center">
+                    <div ref={inputRef}  className="relative flex items-center">
                       <Input
                         error={Boolean(errors.preferences && touched.preferences)}
                         color='black'
                         {...field}
                         value={searchTerm}
                         onChange={handleSearchChange}
+                        onClick={() => setSuggestions(restrictions)}
                         onKeyDown={(event) => handleKeyDown(event, setFieldValue, setFieldError, values.preferences)}
                         type='text'
                         placeholder='Buscar'
@@ -160,36 +182,30 @@ export default function PreferenceForm(): JSX.Element {
                     </div>
                   )}
                 </Field>
-                {errors.preferences && touched.preferences ? (
-                  <ErrorMessage className='h-5 text-[0.8rem] text-start pl-1 text-black' name='preferences'>
+                {errors.preferences && touched.preferences && (
+                  <ErrorMessage name='preferences' className='h-5 text-[0.8rem] text-start pl-1 text-black'>
                     {msg => <SpecificErrorMessage>{msg}</SpecificErrorMessage>}
                   </ErrorMessage>
-                ) : (
-                  <div className='min-h-5 text-[0.5rem] pt-1'>
-                  </div>
                 )}
-                <div className="flex flex-wrap gap-1 min-h-8 pb-2 pt-2" >
-                  {values.preferences && values.preferences.map((valor, index) => (
+                <div className="flex flex-wrap gap-1 min-h-8 pb-2 pt-2">
+                  {values.preferences?.map((valor, index) => (
                     <Chip 
                       key={index} 
                       value={valor} 
                       onClose={() => handleRemovePreference(valor, setFieldValue, values.preferences)} 
-                      animate={{
-                        mount: { y: 0 },
-                        unmount: { y: 20 },
-                      }}
+                      animate={{ mount: { y: 0 }, unmount: { y: 20 } }}
                       size="sm"
                       className="text-[0.6rem] capitalize"
                     />
                   ))}
                 </div>
               </CardBody>
-              <CardFooter className='flex flex-row justify-center space-x-2 p-0 pt-10 pb-20'>
+              <CardFooter className='flex flex-row justify-center space-x-2 p-0 pt-10'>
                 <Button onClick={handleSkip} color='white' className='border-[0.1rem] border-black py-3 px-10'>
-                  OMITIR
+                  {father === 'page' ? 'OMITIR' : 'CANCELAR'}
                 </Button>
                 <Button type='submit' color='black' className='py-3 px-10'>
-                  CONTINUAR
+                  {father === 'page' ? 'CONTINUAR' : 'ACEPTAR'}
                 </Button>
               </CardFooter>
             </Card>

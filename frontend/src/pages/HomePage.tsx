@@ -19,7 +19,7 @@ export default function HomePage() {
         <div className="min-h-[9.25rem] min-w-full bg-black rounded-lg"></div>
         <div className="flex justify-between pt-2">
           <Typography variant="h6">Nombre del Producto</Typography>
-          <Typography variant="h5">$99</Typography>
+          <Typography variant="h5">$ 99</Typography>
         </div>
         <Typography variant="small" className="text-blue-gray-500">Para dos personas</Typography>
       </div>

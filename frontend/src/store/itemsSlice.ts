@@ -8,12 +8,10 @@ export const DEFAULT_ITEM: Item = {
   name: '',
   price: 0,
   description: '',
+  ingredients: [],
   category: '',
-  keywords: [''],
+  keywords: [],
   portion: 0,
-  nutritional_value: 0,
-  prep_time: 0,
-  max_queries: 0,
   image_url: ''}
 
 const isValidUserState = (state: any): state is Item => {

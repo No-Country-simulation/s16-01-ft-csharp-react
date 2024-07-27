@@ -37,7 +37,7 @@ import {
     }
   
     /**
-     * This method delete a Purchase by Id
+     * This method delete a Item by Id
      * @param {number} id This parameter required a Id
      */
     const useDeleteItemById = (id: string) => {
@@ -45,7 +45,7 @@ import {
     }
   
     /**
-     * This method reset the List of Purchases
+     * This method reset the List of Items
      */
     const useResetItems = () => {
       dispatch(resetItems())

@@ -20,8 +20,8 @@ export default function TopNavBar() {
   const goToBack = () => {
     if(location.pathname === '/menu' || location.pathname.startsWith('/product') ) {
       return BackButton('carta')
-    } else if(location.pathname === '/consumption') {
-      return BackButton('consumos')
+    } else if(location.pathname === '/orders') {
+      return BackButton('pedidos')
     } else {
       return <img src={LogoMD} className='h-[2rem]' />
     }

@@ -2,29 +2,43 @@ export interface User {
     user_id: string,
     username: string,
     preferences: string[],
+    quantity_pay: number,
     user_state?: UserState,
     order_list?: Order[]
 }
 
+export interface OtherUser {
+    user_id: string,
+    username: string,
+    preferences: string[],
+    quantity_pay: number,
+    order_list?: Order[]
+}
+
 export interface UserState {
-    state: 'Loading' | 'Completed' | 'Error' | '',
+    state: UserStateState,
     path: string,
     parameter: string,
     message: string
 }
 
+export enum UserStateState {
+    '' = 0,
+    'Loading' = 1,
+    'Error' = 2,
+    'Completed' = 3
+}
+
 export interface Order {
     order_id: string,
     item_id: string,
-    quantity: number,
     order_status: OrderStatus
 }
 
 export enum OrderStatus {
-    'selected' = 0,
-    'sent' = 1,
-    'processing' = 2,
-    'received' = 3
+    'pending' = 0,
+    'processing' = 1,
+    'received' = 2
 }
 
 export interface CredentialsUser {
@@ -32,7 +46,7 @@ export interface CredentialsUser {
 }
 
 export type CredentialsPreference = {
-    preference: string[];
+    preferences: string[];
 }
 
 export interface Item {
@@ -40,12 +54,10 @@ export interface Item {
     name: string,
     price: number,
     description: string,
+    ingredients: string[],
     category: string,
     keywords: string[],
     portion: number,
-    nutritional_value: number,
-    prep_time: number,
-    max_queries: number,
     image_url: string
 }
 

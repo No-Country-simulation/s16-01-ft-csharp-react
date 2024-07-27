@@ -3,7 +3,7 @@ import { useItemsActions } from "../hooks/useItemsActions";
 import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
 import CheckBadge from "../assets/CheckBadge";
 import { useUserActions } from "../hooks/useUserActions";
-import { Order } from "../models/types.d";
+import { OrderStatus } from "../models/types.d";
 
 export default function ProductPage() {
   const { id } = useParams();
@@ -13,15 +13,10 @@ export default function ProductPage() {
 
   const selectItem = (value: string) => {
     if(value !== ''){
-      const order = user.order_list.length !== 0 ? 
-      user.order_list.find((order: Order ) => order.item_id === value) : ''
-    if(order !== ''){
-      useSetUserOrderList(user.order_list.map((order: Order) => order.item_id === value ?
-        { order_id: value, item_id: value, quantity: order.quantity + 1, order_status: 'selected' } : order))
-    } else {
       useSetUserOrderList([...user.order_list,
-        { order_id: value, item_id: value, quantity: 1, order_status: 'selected' }])
-    }
+        { order_id: (user.order_list.length).toString(), 
+          item_id: value, 
+          order_status: OrderStatus.pending }])
     }
   }
 
@@ -42,7 +37,7 @@ export default function ProductPage() {
                 <Typography variant="small" className="font-medium text-blue-gray-500">Para {item?.portion} persona(s)</Typography>
               </div>
               <Typography variant="h5" color="black" className="font-medium">
-                ${ item?.price.toFixed(2) }
+                $ { item?.price.toFixed(2) }
               </Typography>
             </div>
             <Typography
@@ -71,6 +66,12 @@ export default function ProductPage() {
             >
               Agregar
             </Button>
+            <div className="pb-2">
+            <Typography variant="h6" color="black" className="font-bold pt-5 pb-3"><ul>Ingredientes:</ul></Typography>
+            { item?.ingredients.map((ingredient: string, index: number) => (
+              <Typography key={index} className="capitalize" ><li>{ ingredient }</li></Typography>
+            )) }
+            </div>
           </CardFooter>
         </Card>
       </div>

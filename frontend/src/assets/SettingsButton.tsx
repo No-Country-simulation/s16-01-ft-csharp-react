@@ -1,8 +1,12 @@
 import { Button } from "@material-tailwind/react";
 
-export default function SettingsButton() {
+interface SettingsButtonProps {
+  handleOpen?: () => void;
+}
+
+export const SettingsButton: React.FC<SettingsButtonProps> = ({ handleOpen }) => {
   return (
-    <Button className="h-[2.5rem] w-[3.25rem] border-[1px] border-blue-gray-900 flex items-center justify-center rounded p-0" variant="text">
+    <Button onClick={handleOpen} className="h-[2.5rem] w-[3.25rem] border-[1px] border-blue-gray-900 flex items-center justify-center rounded p-0" variant="text">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"

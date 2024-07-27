@@ -31,13 +31,13 @@ export default function BottomNavBar() {
         </Typography>
       </div>
       <div className="flex flex-col items-center">
-        <Link to='/consumption'>
-          <IconButton variant="text" className={`bg-white rounded-full ${isActive('/consumption') ? 'bg-gray-900/20' : ''}`}>
+        <Link to='/orders'>
+          <IconButton variant="text" className={`bg-white rounded-full ${isActive('/orders') ? 'bg-gray-900/20' : ''}`}>
             <ShoppingCartButton />
           </IconButton>
         </Link>
         <Typography variant="small" className={`text-[0.63rem] font-medium`}>
-          Consumos
+          Pedidos
         </Typography>
       </div>
     </Navbar>

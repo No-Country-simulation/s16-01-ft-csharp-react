@@ -24,7 +24,7 @@ export const useUserActions = () => {
 
   /**
    * This method set a User Order List in the Context
-   * @param {*} data This parameter required a User State
+   * @param {*} data This parameter required a Order List
    */
   const useSetUserOrderList = (data: Order[]) => {
     dispatch(setUserOrderList(data))

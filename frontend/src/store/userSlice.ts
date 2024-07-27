@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { Order, User, UserState } from '../models/types.d'
+import { Order, User, UserState, UserStateState } from '../models/types.d'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 const DEFAULT_STATE: User = {
   user_id: '',
   username: '',
   preferences: [],
-  user_state: { state: '', path: '', parameter: '', message: '' },
+  quantity_pay: 0,
+  user_state: { state: UserStateState[''], path: '', parameter: '', message: '' },
   order_list: []
 }
 

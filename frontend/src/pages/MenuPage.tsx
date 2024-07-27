@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useItemsActions } from "../hooks/useItemsActions";
 import { useUserActions } from "../hooks/useUserActions";
 import { Button, Card, CardBody, CardFooter, Chip, Input, Tab, Tabs, TabsHeader, Typography } from "@material-tailwind/react";
-import SettingsButton from "../assets/SettingsButton";
 import GlassButton from "../assets/GlassButton";
 import XMark from "../assets/XMark";
 import CheckBadge from "../assets/CheckBadge";
 import { Link } from "react-router-dom";
+import { PreferenceModal } from "../components/container/PreferenceModal";
 
 export default function MenuPage() {
   const { items  } = useItemsActions();
@@ -32,9 +32,7 @@ export default function MenuPage() {
           item.description.toLowerCase().includes(filter.toLowerCase()) ||
           item.keywords.some(keyword => keyword.toLowerCase().includes(filter.toLowerCase()))) &&
         (!user.preferences.some((preference: string) =>
-          item.name.toLowerCase().includes(preference.toLowerCase()) ||
-          item.description.toLowerCase().includes(preference.toLowerCase()) ||
-          item.keywords.some(keyword => keyword.toLowerCase().includes(preference.toLowerCase()))))
+          item.ingredients.some(ingredient => ingredient.toLowerCase().includes(preference.toLowerCase()))))
       )
     };
 
@@ -49,9 +47,9 @@ export default function MenuPage() {
           <Input crossOrigin="false" name="search" type="text" label="Buscar" placeholder="Buscar" value={filter} onChange={handleChange} className="pr-20" containerProps={{ className: "min-w-0" }} />
           <GlassButton />
         </div>
-        <SettingsButton />
+        <PreferenceModal />
       </div>
-      <div className="min-w-[90%] flex pt-4 gap-2 pb-6">
+      <div className="min-w-[90%] max-w-[90%] flex pt-4 gap-2 pb-6 overflow-x-scroll">
         {user.preferences.map((preference: string, index: number) => (
           <Chip key={index} variant="outlined" 
             icon={
@@ -83,7 +81,7 @@ export default function MenuPage() {
                     <Typography variant="h6" className="font-semibold text-black">{item.name}</Typography>
                     <Typography variant="small" className="font-medium text-blue-gray-500">Para {item.portion} persona(s)</Typography>
                   </div>
-                  <Typography variant="h5" className="text-black">${item.price.toFixed(2)}</Typography>
+                  <Typography variant="h5" className="text-black">$ {item.price.toFixed(2)}</Typography>
                 </div>
                 <Typography variant="small" className="text-[#607D8B]">{item.description}</Typography>
               </CardBody>
