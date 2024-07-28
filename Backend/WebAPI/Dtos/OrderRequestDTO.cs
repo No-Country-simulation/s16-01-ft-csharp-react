@@ -1,8 +1,8 @@
 ﻿namespace WebAPI.Dtos
 {
-    public class OrderRequestDTO
+    public class OrderRequestDto
     {
         public string Token { get; set; }
-        public OrderDataDTO Data { get; set; }
+        public OrderDataDto Data { get; set; }
     }
 }

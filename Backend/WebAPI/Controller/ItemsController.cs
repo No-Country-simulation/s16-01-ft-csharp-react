@@ -16,10 +16,23 @@ namespace WebAPI.Controller
         {
             _context = context;
         }
+
         [HttpGet("all")]
         public async Task<ActionResult<List<ListItemsDto>>> GetItems()
         {
-            var items = await _context.Items.ToListAsync();
+            var items = await _context.Items
+                .Select(item => new ListItemsDto
+                {
+                    ItemId = item.ItemId.ToString(),
+                    ItemName = item.ItemName,
+                    ItemPrice = item.ItemPrice,
+                    Description = item.Description,
+                    KeyWords = item.KeyWords,
+                    Portion = item.Portion,
+                    ImageUrl = item.ImageUrl,
+                    Ingredients = item.Ingredients
+                })
+                .ToListAsync();
 
             return Ok(items);
         }

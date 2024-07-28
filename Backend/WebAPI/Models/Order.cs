@@ -8,8 +8,6 @@ namespace WebAPI.Models
         public string OrderId { get; set; }
         public string OrderStatus { get; set; }
 
-        [Required]
-        public int Quantity { get; set; }
         [Required] 
         public string UserName { get; set; }
 

@@ -5,6 +5,8 @@ namespace WebAPI.Models
 {
     public class OrderItem
     {
+        public bool IsReady;
+
         [Key]
         public string OrderItemId { get; set; }
 
@@ -13,7 +15,5 @@ namespace WebAPI.Models
 
         public string ItemId { get; set; }
         public virtual Item Item { get; set; }
-
-        public int Quantity { get; set; }
     }
 }

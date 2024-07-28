@@ -8,8 +8,13 @@ namespace WebAPI.Models
         [MaxLength(20)]
         public string WaiterName { get; set; }
 
-        public string TableId { get; set; }
+        [Key]
+        public string WaiterId { get; set; }
 
-        public Table Table { get; set; }
+        // Relación con Table
+        public virtual ICollection<Table> Tables { get; set; } = new List<Table>();
+
+        // Relación con Session
+        public ICollection<Session> Sessions { get; set; } = new List<Session>();
     }
 }

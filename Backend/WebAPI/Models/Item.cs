@@ -18,16 +18,14 @@ namespace WebAPI.Models
         [MaxLength(200)]
         public string Description { get; set; }
 
-        public string KeyWords { get; set; }
+        public List<String> KeyWords { get; set; }
 
         [Range(0, 10, ErrorMessage = "Portion must be between 1 and 10.")]
         public int Portion { get; set; }
 
-        [Range(1, 1000, ErrorMessage = "NutritionalValue must be between 1 and 10000.")]
-        public int NutritionalValue { get; set; }
+        public List<String> Ingredients { get; set; }
 
-        [Range(0, 120, ErrorMessage = "PreparationTime must be between 1 and 120.")]
-        public int PreparationTime { get; set; }
+        public string Category { get; set; }
 
         public string ImageUrl { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 using WebAPI.Models;
 
 namespace WebAPI.Data
@@ -15,11 +16,15 @@ namespace WebAPI.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<Waiter> Waiters { get; set; }
+        public DbSet<Table> Tables { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Waiter>()
-                .HasNoKey();
+            modelBuilder.Entity<Table>()
+                .HasOne(w => w.Waiter)
+                .WithMany(w => w.Tables)
+                .HasForeignKey(t => t.WaiterId);
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.User)
@@ -45,6 +50,11 @@ namespace WebAPI.Data
                 .HasMany(i => i.OrderItems)
                 .WithOne(oi => oi.Item)
                 .HasForeignKey(oi => oi.ItemId);
+
+            modelBuilder.Entity<Session>()
+                .HasOne(s => s.Waiter)
+                .WithMany(w => w.Sessions)
+                .HasForeignKey(s => s.WaiterId);modelBuilder.Entity<Item>();
 
             base.OnModelCreating(modelBuilder);
         }

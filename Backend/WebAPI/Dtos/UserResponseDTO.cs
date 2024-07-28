@@ -1,6 +1,6 @@
 ﻿namespace WebAPI.Dtos
 {
-    public class UserResponseDTO
+    public class UserResponseDto
     {
         public string UserId { get; set; }
         public string Token { get; set; }
