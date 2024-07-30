@@ -15,24 +15,34 @@ const DEFAULT_STATE: UserState = {
   waiter_name: ''
 }
 
+const expectedUserStateKeys = ['user_id', 'username', 'state', 'waiter_name'];
+const expectedUserStateStateKeys = ['status', 'path', 'parameter', 'message', 'timeout'];
+
+const isValidUserStateState = (state: any): state is UserStateState => {
+  return expectedUserStateStateKeys.every(key => key in state);
+};
+
 const isValidUserState = (state: any): state is UserState => {
-  return Object.keys(state).every(key => key in state);
+  if (!expectedUserStateKeys.every(key => key in state)) {
+    return false;
+  }
+  return isValidUserStateState(state.state);
 };
 
 const initialState = (() => {
-  const persistedState = window.localStorage.getItem('session_state')
-  return persistedState ? (isValidUserState(JSON.parse(persistedState).user) ? JSON.parse(persistedState).user: DEFAULT_STATE) : DEFAULT_STATE
-})()
+  const persistedState = window.localStorage.getItem('session_state');
+  return persistedState ? (isValidUserState(JSON.parse(persistedState).user) ? JSON.parse(persistedState).user : DEFAULT_STATE) : DEFAULT_STATE;
+})();
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     setUser: (_state, action: PayloadAction<UserState>) => {
-      return {...action.payload }
+      return { ...action.payload }
     },
     setUserState: (state, action: PayloadAction<UserStateState>) => {
-      return {...state, state: { ...action.payload} }
+      return { ...state, state: { ...action.payload } }
     },
     resetUser: () => {
       return DEFAULT_STATE
