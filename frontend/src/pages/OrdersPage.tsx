@@ -1,27 +1,26 @@
-import { Button, Card, Typography } from "@material-tailwind/react";
-import { useUserActions } from "../hooks/useUserActions";
-import { Item, Order, OtherUser } from "../models/types.d";
+import { Card, Typography } from "@material-tailwind/react";
+import { Item, Order, User } from "../models/types.d";
 import { useItemsActions } from "../hooks/useItemsActions";
 import { BottomPerOrder } from "../components/container/BottomPerOrder";
 import { TopPerOrder } from "../components/container/TopPerOrder";
 import CenterOrder from "../components/container/CenterOrder";
-import { useOthersActions } from "../hooks/useOthersActions";
+import CloseOrders from "../components/container/CloseOrders";
+import { useUsersActions } from "../hooks/useUsersActions";
 
 export default function OrdersPage() {
-  const { user } = useUserActions();
   const { items } = useItemsActions(); 
-  const { others } = useOthersActions();
-  const totalOrderPrice = user.order_list.reduce((total: number, order: Order) => {
-    const item = items?.find((item: Item) => item.item_id === order.item_id);
+  const { users, myUser } = useUsersActions()
+  const totalOrderPrice = myUser.order_list?.reduce((total: number, order: Order) => {
+    const item = items.find((item: Item) => item.item_id === order.item_id);
     return total + (item ? item.price : 0);
   }, 0).toFixed(2);
 
   return (
-    <div className="min-h-full min-w-full flex flex-col items-center pt-[4.37rem] pb-[6.5rem]">
-      <div className="min-h-full min-w-[90%] flex flex-col">
+    <div className="min-h-full min-w-full flex flex-col items-center pt-[4.37rem] pb-[12rem]">
+      <div className="min-h-full min-w-[90%] flex flex-col overflow-y-scroll">
         <Typography variant="h6" className="font-bold pt-4 pb-1">Mis Pedidos</Typography>
         <div>
-          {user.order_list.map((order: Order, index: number) => (
+          {myUser.order_list?.map((order: Order, index: number) => (
             <Card key={index} className="mb-5 px-2">
               <TopPerOrder item={items?.find((item: Item) => item.item_id === order.item_id)} />
               <BottomPerOrder order_to_manage={order} itsUser={true} />
@@ -30,8 +29,8 @@ export default function OrdersPage() {
         </div>
         <CenterOrder />
       </div>
-      {others.map((other: OtherUser, index: number) => (
-        <div key={index} className="min-w-[90%]">
+      {users.filter((user: User) => user.user_id !== myUser.user_id).map((other: User, index: number) => (
+        <div key={index} className="min-w-[90%] pb-20">
           <Typography variant="h6" className="font-bold pt-4 pb-1">{other.username}</Typography>
           {other.order_list?.map((order: Order, indexSecond: number) => (
             <Card key={indexSecond} className="mb-5 px-2">
@@ -46,7 +45,7 @@ export default function OrdersPage() {
           <Typography variant="h6" className="font-bold pt-4 pb-1">Total de mis pedidos</Typography>
           <Typography variant="h6" className="font-bold pt-4 pb-1">$ { totalOrderPrice }</Typography>
         </div>
-        <Button fullWidth>CERRRAR PEDIDO</Button>
+        <CloseOrders />
       </div>
     </div>
   );

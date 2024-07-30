@@ -1,12 +1,13 @@
 import { Button, Card, CardBody, CardFooter, Input, Typography, Chip } from "@material-tailwind/react";
 import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import * as Yup from 'yup';
 import { useState, useEffect, useRef } from "react";
 import { SpecificErrorMessage } from "../pure/SpecificErrorMessage";
-import { useUserActions } from "../../hooks/useUserActions";
 import Plus from "../../assets/Plus";
 import type { CredentialsPreference } from "../../models/types.d";
+import { useUsersActions } from "../../hooks/useUsersActions";
+import { useUserActions } from "../../hooks/useUserActions";
 
 interface PreferenceFormProps {
   father: string;
@@ -29,9 +30,9 @@ const restrictions = [
 ];
 
 export const PreferenceForm: React.FC<PreferenceFormProps> = ({ father, handleOpen }) => {
-  const { user, useSetUser } = useUserActions();
+  const { user, useSetUserStateState } = useUserActions()
+  const { myUser, useSetUserPreferences } = useUsersActions()
   const location = useLocation()
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const inputRef = useRef<HTMLDivElement>(null);
@@ -43,7 +44,7 @@ export const PreferenceForm: React.FC<PreferenceFormProps> = ({ father, handleOp
   });
   
   const initialCredentials: CredentialsPreference = {
-    preferences: user.preferences.length > 0 ? user.preferences : []
+    preferences: myUser.preferences.length > 0 ? myUser.preferences : []
   };
 
   useEffect(() => {
@@ -107,12 +108,12 @@ export const PreferenceForm: React.FC<PreferenceFormProps> = ({ father, handleOp
   };
 
   const handleSubmit = async (values: CredentialsPreference, { setSubmitting }: FormikHelpers<CredentialsPreference>) => {
-    useSetUser({ ...user, preferences: values.preferences });
+    useSetUserPreferences({ user_id: myUser.user_id, preferences: values.preferences })
     setSubmitting(false);
     if (father === 'modal' && handleOpen) {
       handleOpen();
     } else if (location.pathname === '/preference' && father === 'page') {
-      navigate('/home');
+      useSetUserStateState({...user.state, status: 1, path: '/home' })
     }
   };
 
@@ -120,7 +121,7 @@ export const PreferenceForm: React.FC<PreferenceFormProps> = ({ father, handleOp
     if (father === 'modal' && handleOpen) {
       handleOpen();
     } else if (location.pathname === '/preference' && father === 'page') {
-      navigate('/home');
+      useSetUserStateState({...user.state, status: 1, path: '/home' })
     }
   };
 

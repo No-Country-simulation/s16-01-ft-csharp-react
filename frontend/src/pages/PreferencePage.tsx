@@ -21,7 +21,7 @@ export default function PreferencePage() {
           <img className="min-h-[1.95rem] pt-20 pb-[5rem]" src={LogoTextSM} />
           <GreetingsWithTime/>
           <Typography variant="h5" color="black" className="pt-10 pb-10 text-start">
-            ¿Quieres excluir algún ingrediente en tu menú?
+            ¿Quieres excluir algún ingrediente de tu menú?
           </Typography>
         </div>
         <PreferenceForm father='page' />

@@ -1,24 +1,26 @@
 import { useState } from "react";
 import { useItemsActions } from "../hooks/useItemsActions";
-import { useUserActions } from "../hooks/useUserActions";
 import { Button, Card, CardBody, CardFooter, Chip, Input, Tab, Tabs, TabsHeader, Typography } from "@material-tailwind/react";
 import GlassButton from "../assets/GlassButton";
 import XMark from "../assets/XMark";
 import CheckBadge from "../assets/CheckBadge";
 import { Link } from "react-router-dom";
 import { PreferenceModal } from "../components/container/PreferenceModal";
+import { useUsersActions } from "../hooks/useUsersActions";
+import { Item } from "../models/types";
+
+export const data = [
+  { value: "Platos", },
+  { value: "Entradas", },
+  { value: "Bebidas", },
+  { value: "Postres", },
+];
 
 export default function MenuPage() {
-  const { items  } = useItemsActions();
-  const { user, useSetUser } = useUserActions();
+  const { items  } = useItemsActions()
+  const { myUser, useSetUserPreferences } = useUsersActions()
   const [filter, setFilter] = useState<string>("");
   const [category, setCategory] = useState<string>("Platos");
-  const data = [
-    { value: "Platos", },
-    { value: "Entradas", },
-    { value: "Bebidas", },
-    { value: "Postres", },
-  ];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
@@ -26,18 +28,18 @@ export default function MenuPage() {
 
   const getFilteredItems = () => {
     return items
-      .filter(item =>
+      .filter((item: Item) =>
         (item.category === category) &&
         (item.name.toLowerCase().includes(filter.toLowerCase()) ||
           item.description.toLowerCase().includes(filter.toLowerCase()) ||
-          item.keywords.some(keyword => keyword.toLowerCase().includes(filter.toLowerCase()))) &&
-        (!user.preferences.some((preference: string) =>
+          item.keywords.some((keyword: String) => keyword.toLowerCase().includes(filter.toLowerCase()))) &&
+        (!myUser.preferences.some((preference: string) =>
           item.ingredients.some(ingredient => ingredient.toLowerCase().includes(preference.toLowerCase()))))
       )
     };
 
   const deletePreference = (preference: string) => {
-    useSetUser({...user, preferences: user.preferences.filter((value: string) => value !== preference)})
+    useSetUserPreferences({...myUser, preferences: myUser.preferences.filter((value: string) => value !== preference)})
   }
 
   return (
@@ -50,7 +52,7 @@ export default function MenuPage() {
         <PreferenceModal />
       </div>
       <div className="min-w-[90%] max-w-[90%] flex pt-4 gap-2 pb-6 overflow-x-scroll">
-        {user.preferences.map((preference: string, index: number) => (
+        {myUser.preferences.map((preference: string, index: number) => (
           <Chip key={index} variant="outlined" 
             icon={
               <Button onClick={() => deletePreference(preference)} variant="text" className="p-0 rounded-none bg-white text-black">

@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './userSlice'
 import itemsReducer from './itemsSlice'
-import othersReducer from './othersSlice'
+import usersReducer from './usersSlice'
 import { apiSlice } from './apiSlice'
 
 const persistanceLocalStorageMiddleware = (store: any) => (next: any) => (action: any) => {
@@ -13,7 +13,7 @@ export const store = configureStore({
   reducer: {
     user: userReducer,
     items: itemsReducer,
-    others: othersReducer,
+    users: usersReducer,
     [apiSlice.reducerPath]: apiSlice.reducer
   },
   middleware: getDefaultMiddleware =>

@@ -5,6 +5,7 @@ import * as Yup from 'yup'
 import { CredentialsUser } from "../../models/types.d"
 import { SpecificErrorMessage } from "../pure/SpecificErrorMessage"
 import { useUserActions } from "../../hooks/useUserActions"
+import { useUsersActions } from "../../hooks/useUsersActions"
 
 const loginSchema = Yup.object().shape({
     username: Yup.string().max(20, 'Máximo 20 caracteres')
@@ -17,6 +18,7 @@ const initialCredentials: CredentialsUser = {
 
 export default function NameForm(): JSX.Element {
     const { user, useSetUser } = useUserActions()
+    const { useSetUserSimple, myUser } = useUsersActions()
     const navigate = useNavigate()
     const handleSubmit = async (values: CredentialsUser, { setSubmitting }: FormikHelpers<CredentialsUser>) => {
         /* try {
@@ -27,7 +29,8 @@ export default function NameForm(): JSX.Element {
         } catch (error) {
           console.log(error)
         } */
-        useSetUser({...user, username: values.username})
+        useSetUserSimple({ user_id: '0', username: values.username, quantity_pay: myUser.quantity_pay })
+        useSetUser({...user, user_id: myUser.user_id, username: myUser.username})
         setSubmitting(false)
         navigate('/preference')
     }

@@ -12,6 +12,7 @@ import ProductPage from '../pages/ProductPage'
 import OrdersPage from '../pages/OrdersPage'
 import PaymentPage from '../pages/PaymentPage'
 import InvoicePage from '../pages/InvoicePage'
+import SurveyPage from '../pages/SurveyPage'
 
 const routes = [
   {
@@ -31,6 +32,7 @@ const routes = [
       { path: '/register', element: <RegisterPage /> },
       { path: '/preference', element: <PreferencePage /> },
       { path: '/invoice', element: <InvoicePage /> },
+      { path: '/survey', element: <SurveyPage /> },
       { path: '*', element: <NotFoundPage /> }
     ]
   },

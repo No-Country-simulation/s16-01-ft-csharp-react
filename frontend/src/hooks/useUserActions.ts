@@ -1,41 +1,33 @@
 import { useAppDispatch, useAppSelector } from './store'
-import { resetUser, setUser, setUserState, setUserOrderList } from '../store/userSlice'
-import type { Order, User, UserState } from '../models/types.d'
+import { resetUser, setUser, setUserState,  } from '../store/userSlice'
+import type { UserState, UserStateState } from '../models/types.d'
 
 export const useUserActions = () => {
-  const user = useAppSelector(state => state.user)
+  const user: UserState = useAppSelector(state => state.user)
   const dispatch = useAppDispatch()
-
-  /**
-   * This method set a User in the Context
-   * @param {*} data This parameter required a User
-   */
-  const useSetUser = (data: User) => {
-    dispatch(setUser(data))
-  }
 
   /**
    * This method set a User State in the Context
    * @param {*} data This parameter required a User State
    */
-  const useSetUserState = (data: UserState) => {
+  const useSetUser = (data: UserState) => {
+    dispatch(setUser(data))
+  }
+
+  /**
+   * This method set a User State in the Context
+   * @param {*} data This parameter required a User State State
+   */
+  const useSetUserStateState = (data: UserStateState) => {
     dispatch(setUserState(data))
   }
 
   /**
-   * This method set a User Order List in the Context
-   * @param {*} data This parameter required a Order List
-   */
-  const useSetUserOrderList = (data: Order[]) => {
-    dispatch(setUserOrderList(data))
-  }
-
-  /**
-   * This method reset the User
+   * This method reset the User State
    */
   const useResetUser = () => {
     dispatch(resetUser())
   }
 
-  return { useResetUser, useSetUser,useSetUserState, useSetUserOrderList, user }
+  return { useResetUser, useSetUser, useSetUserStateState, user }
 }

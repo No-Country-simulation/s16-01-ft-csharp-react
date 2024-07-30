@@ -1,11 +1,11 @@
 import { Button, CardFooter, Typography } from "@material-tailwind/react";
-import { Order, OrderStatus } from "../../models/types.d";
+import { Order } from "../../models/types.d";
 import Clock from "../../assets/Clock";
 import Ellipsis from "../../assets/Ellipsis";
 import Check from "../../assets/Check";
 import Trash from "../../assets/Trash";
 import ArrowPath from "../../assets/ArrowPath";
-import { useUserActions } from "../../hooks/useUserActions";
+import { useUsersActions } from "../../hooks/useUsersActions";
 
 interface BottomPerOrderProps {
     order_to_manage: Order,
@@ -13,7 +13,7 @@ interface BottomPerOrderProps {
 }
 
 export const  BottomPerOrder: React.FC<BottomPerOrderProps> = ({ order_to_manage, itsUser }) => {
-    const { user, useSetUserOrderList } = useUserActions()
+    const { myUser, useSetUserOrder, useSetUserOrderList } = useUsersActions()
 
     const selectButton = () => {
         if(order_to_manage.order_status === 0){
@@ -40,19 +40,19 @@ export const  BottomPerOrder: React.FC<BottomPerOrderProps> = ({ order_to_manage
     }
 
     const deleteOrder = (order_to_delete: Order) => {
-        if(order_to_delete.order_status === 0){
-            useSetUserOrderList([...user.order_list.filter((order: Order) => (
-                order.order_id !== order_to_delete.order_id
-            ))]
-        )}
+        if (order_to_delete.order_status === 0 && myUser.order_list) {
+            useSetUserOrderList([...myUser.order_list.filter((orderTo: Order) => (
+                orderTo.order_id !== order_to_delete.order_id
+            )).map(({ item_id, order_id, order_status }) =>
+                ({ user_id: myUser.user_id, order_id, item_id, order_status })) ])
+        }
     }
 
-    const repeatOrder = (order_to_delete: Order) => {
-        if(order_to_delete.order_status === 2){
-            useSetUserOrderList([...user.order_list,
-                { order_id: (user.order_list.length).toString(), 
-                item_id: order_to_delete.item_id, 
-                order_status: OrderStatus.pending }])
+    const repeatOrder = (order_to_repeat: Order) => {
+        if(order_to_repeat.order_status === 2 && myUser.order_list){
+            useSetUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
+                item_id: order_to_repeat.item_id, 
+                order_status: 0 })
         }
     }
 

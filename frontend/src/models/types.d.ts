@@ -3,30 +3,29 @@ export interface User {
     username: string,
     preferences: string[],
     quantity_pay: number,
-    user_state?: UserState,
-    order_list?: Order[]
-}
-
-export interface OtherUser {
-    user_id: string,
-    username: string,
-    preferences: string[],
-    quantity_pay: number,
     order_list?: Order[]
 }
 
 export interface UserState {
+    user_id: string,
+    username: string,
     state: UserStateState,
-    path: string,
-    parameter: string,
-    message: string
+    waiter_name: string
 }
 
-export enum UserStateState {
+export interface UserStateState {
+    status: UserStatus,
+    path: string,
+    parameter: string,
+    message: string,
+    timeout: number
+}
+export enum UserStatus {
     '' = 0,
     'Loading' = 1,
     'Error' = 2,
-    'Completed' = 3
+    'Completed' = 3,
+    'Logo' = 4
 }
 
 export interface Order {
@@ -49,6 +48,11 @@ export type CredentialsPreference = {
     preferences: string[];
 }
 
+export interface CredentialsExpense {
+    selectedUsers: User[];
+    paymentOption: 'divided' | 'all' | 'selected';
+}
+
 export interface Item {
     item_id: string,
     name: string,
@@ -64,4 +68,22 @@ export interface Item {
 export interface NewItem {
     id: string,
     newData: Item
+}
+
+export interface UserSimple {
+    user_id: string,
+    username: string,
+    quantity_pay: number,
+}
+
+export interface UserAndPreference {
+    user_id: string,
+    preferences: string[]
+}
+
+export interface UserAndOrder {
+    user_id: string,
+    order_id: string,
+    item_id: string,
+    order_status: OrderStatus
 }

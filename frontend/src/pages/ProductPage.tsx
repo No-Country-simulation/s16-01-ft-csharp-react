@@ -1,22 +1,21 @@
 import { useParams } from "react-router-dom";
 import { useItemsActions } from "../hooks/useItemsActions";
-import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
-import CheckBadge from "../assets/CheckBadge";
-import { useUserActions } from "../hooks/useUserActions";
+import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react"
 import { OrderStatus } from "../models/types.d";
+import { useUsersActions } from "../hooks/useUsersActions";
+import CheckBadge from "../assets/CheckBadge";
 
 export default function ProductPage() {
   const { id } = useParams();
   const { items } = useItemsActions()
-  const { user, useSetUserOrderList } = useUserActions()
+  const { myUser, useSetUserOrder } = useUsersActions()
   const item = items.find(item => item?.item_id === id?.toString())
 
   const selectItem = (value: string) => {
-    if(value !== ''){
-      useSetUserOrderList([...user.order_list,
-        { order_id: (user.order_list.length).toString(), 
+    if(value !== '' && myUser.order_list ){
+      useSetUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
           item_id: value, 
-          order_status: OrderStatus.pending }])
+          order_status: OrderStatus.pending })
     }
   }
 
