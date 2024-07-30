@@ -57,6 +57,11 @@ namespace WebAPI.Data
                 .WithMany(w => w.Sessions)
                 .HasForeignKey(s => s.WaiterId);modelBuilder.Entity<Item>();
 
+            modelBuilder.Entity<Invoice>()
+                .HasOne(i => i.Session)
+                .WithMany(s => s.Invoices)
+                .HasForeignKey(i => i.SessionId);
+
             base.OnModelCreating(modelBuilder);
         }
     }

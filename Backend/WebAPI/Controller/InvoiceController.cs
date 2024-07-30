@@ -23,7 +23,6 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Invoice>> CreateInvoice(string sessionId)
         {
-            // Session search
             var session = await _context.Sessions
                 .Include(s => s.Users)
                 .ThenInclude(u => u.Orders)
@@ -36,12 +35,20 @@ namespace WebAPI.Controllers
                 return NotFound("Session not found");
             }
 
+            // Verifica si ya existe una factura para este usuario en la sesión
+            var existingInvoice = await _context.Invoices
+                .FirstOrDefaultAsync(i => i.UserId == session.Users.First().UserId && i.SessionId == sessionId);
+
+            if (existingInvoice != null)
+            {
+                return Conflict("An invoice already exists for this user in this session.");
+            }
+
             decimal totalAmount = session.Users
                 .SelectMany(u => u.Orders)
                 .SelectMany(o => o.OrderItems)
                 .Sum(oi => oi.Item.ItemPrice);
 
-            // Invoice creation
             var invoice = new Invoice
             {
                 InvoiceId = Guid.NewGuid().ToString(),
@@ -49,31 +56,17 @@ namespace WebAPI.Controllers
                 UserId = session.Users.First().UserId,
                 TotalAmount = totalAmount,
                 CreatedDate = DateTime.UtcNow,
-                InvoiceStatus = "pending",
-                PaymentMethod = null
-            };
-
-            // Web Socket Message Creation
-            var message = new WebSocketMessage
-            {
-                Type = "InvoiceCreated",
-                SessionId = session.SessionId,
-                Data = new
-                {
-                    InvoiceId = invoice.InvoiceId,
-                    SessionId = invoice.SessionId,
-                    UserId = invoice.UserId,
-                    TotalAmount = invoice.TotalAmount,
-                    CreatedDate = invoice.CreatedDate,
-                    InvoiceStatus = invoice.InvoiceStatus
-                }
+                InvoiceStatus = "Pending"
             };
 
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
-            await _websocketService.BroadcastMessageToSessionAsync(invoice.SessionId, message);
+
+            // WebSocket notification logic...
+
             return CreatedAtAction(nameof(CreateInvoice), new { id = invoice.InvoiceId }, invoice);
         }
+
 
         [HttpPut("{invoiceId}")]
         public async Task<IActionResult> UpdateInvoice(string invoiceId, Invoice updatedInvoice)
@@ -87,7 +80,7 @@ namespace WebAPI.Controllers
 
             invoice.TotalAmount = updatedInvoice.TotalAmount;
             invoice.InvoiceStatus = updatedInvoice.InvoiceStatus;
-            invoice.PaymentMethod = updatedInvoice.PaymentMethod;
+            //invoice.PaymentMethod = updatedInvoice.PaymentMethod;
 
             //  Web Socket Message Creation
             var message = new WebSocketMessage

@@ -13,6 +13,7 @@ namespace WebAPI.Models
         public Waiter Waiter { get; set; }
         public string WaiterId { get; set; }
 
+        public List<Invoice> Invoices { get; set; }
         public virtual ICollection<User> Users { get; set; } = new List<User>();
     }
 }
