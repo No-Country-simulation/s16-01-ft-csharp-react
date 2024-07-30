@@ -18,6 +18,7 @@ namespace WebAPI.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<Waiter> Waiters { get; set; }
         public DbSet<Table> Tables { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

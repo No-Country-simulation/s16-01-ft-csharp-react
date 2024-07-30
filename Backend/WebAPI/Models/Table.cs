@@ -12,7 +12,7 @@ namespace WebAPI.Models
 
         public string TableStatus { get; set; }
 
-        // Clave foránea para Waiter
+        // Foreign key to Waiter
         public string WaiterId { get; set; }
         public Waiter Waiter { get; set; }
     }

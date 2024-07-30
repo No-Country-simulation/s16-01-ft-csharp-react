@@ -29,7 +29,7 @@ namespace WebAPI.Models
 
         public string ImageUrl { get; set; }
 
-        // Navegación de relación uno a muchos con OrderItem
+        // One-to-Many Relationship Navigation with OrderItem
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

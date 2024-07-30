@@ -14,11 +14,11 @@ namespace WebAPI.Models
         // Foreing Key
         public string UserId { get; set; }
 
-        // Propiedad de navegación a User
+        // Navigation property to User
         [ForeignKey("UserId")]
         public User User { get; set; }
 
-        // Relación con OrderItem
+        // Relationship with OrderItem
         public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

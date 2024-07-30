@@ -3,9 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Dtos;
 using WebAPI.Models;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace WebAPI.Controllers
 {
@@ -14,10 +11,12 @@ namespace WebAPI.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly OrderlyDbContext _context;
+        private readonly WebSocketService _webSocketService;
 
-        public OrdersController(OrderlyDbContext context)
+        public OrdersController(OrderlyDbContext context, WebSocketService webSocketService)
         {
             _context = context;
+            _webSocketService = webSocketService;
         }
 
         [HttpPost]
@@ -63,7 +62,7 @@ namespace WebAPI.Controllers
                     {
                         OrderItemId = Guid.NewGuid().ToString(),
                         ItemId = item.ItemId,
-                        IsReady = false // Inicialmente no listo
+                        IsReady = false // Initially not Ready
                     }
                 }
             };
@@ -71,6 +70,7 @@ namespace WebAPI.Controllers
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
+            //  Create the Response
             var response = new OrderResponseDto
             {
                 OrderId = order.OrderId,
@@ -82,6 +82,19 @@ namespace WebAPI.Controllers
                 OrderStatus = order.OrderStatus
             };
 
+            // Create the Message for WebSocket
+            var message = new WebSocketMessage
+            {
+                Type = "OrderCreated",
+                SessionId = session.SessionId,
+                Data = new
+                {
+                    OrderId = order.OrderId,
+                    Items = order.OrderItems.Select(oi => oi.ItemId).ToList()
+                }
+            };
+
+            await _webSocketService.BroadcastMessageToSessionAsync(session.SessionId, message);
             return CreatedAtAction(nameof(CreateOrder), new { id = response.OrderId }, response);
         }
 
@@ -92,21 +105,21 @@ namespace WebAPI.Controllers
             Received
         }
 
-        // Función para actualizar el estado de la orden basado en los ítems
-        /*public string UpdateOrderStatus(Order order)
+        [HttpDelete("{orderId}")]
+        public async Task<ActionResult> DeleteOrder(string orderId)
         {
-            if (order.OrderItems.All(oi => oi.IsReady))
+            // Search for the order by the ID
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order == null)
             {
-                return OrderStatus.Received.ToString();
+                return NotFound("Order not found");
             }
-            else if (order.OrderItems.Any(oi => oi.IsReady))
-            {
-                return OrderStatus.Processing.ToString();
-            }
-            else
-            {
-                return OrderStatus.Pending.ToString();
-            }
-        }*/
+
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+
+            // Return 204 No Content
+            return NoContent();
+        }
     }
 }

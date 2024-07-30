@@ -37,7 +37,6 @@ namespace WebAPI.Models
             {
             new Table { TableId = "1", TableNumber = "1", TableStatus = "Available", WaiterId = "1" },
             new Table { TableId = "2", TableNumber = "2", TableStatus = "Available", WaiterId = "2" },
-                // Add more tables as necessary
             };
 
             foreach (Table t in tables)

@@ -11,17 +11,18 @@ namespace WebAPI.Controller
     public class UsersController : ControllerBase
     {
         private readonly OrderlyDbContext _context;
+        private readonly WebSocketService _webSocketService;
 
-        public UsersController(OrderlyDbContext context)
+        public UsersController(OrderlyDbContext context, WebSocketService webSocketService)
         {
             _context = context;
+            _webSocketService = webSocketService;
         }
 
         [HttpGet("users")]
         public async Task<ActionResult<List<ListsUserDto>>> GetUsers()
         {
             var users = await _context.Users.ToListAsync();
-
             var usersDto = users.Select(user => new ListsUserDto
             {
                 UserId = user.UserId,
@@ -34,21 +35,20 @@ namespace WebAPI.Controller
             return Ok(usersDto);
         }
 
-        // Registrar un nuevo usuario y, si es necesario, crear o asociar una sesión existente
         [HttpPost("register")]
         public async Task<ActionResult<UserResponseDto>> Register([FromBody] RegisterUserDto registerUserDto)
         {
-            // Validación básica
             if (registerUserDto == null || string.IsNullOrEmpty(registerUserDto.Token))
             {
                 return BadRequest("Invalid token.");
             }
 
-            // Buscar una sesión existente con el mismo token
+            // Search Session
             var session = await _context.Sessions
                 .Include(s => s.Users)
                 .FirstOrDefaultAsync(s => s.Token == registerUserDto.Token);
 
+            // Add Waiter to Session
             var waiter = new Waiter
             {
                 WaiterId = Guid.NewGuid().ToString(),
@@ -57,7 +57,7 @@ namespace WebAPI.Controller
             _context.Waiters.Add(waiter);
             await _context.SaveChangesAsync();
 
-            // Si no existe, crear una nueva sesión y asociar el mesero
+            // Create a New Session and Add an Waiter
             if (session == null)
             {
                 session = new Session
@@ -70,21 +70,21 @@ namespace WebAPI.Controller
                 await _context.SaveChangesAsync();
             }
 
-            // Crear el nuevo usuario y asignarlo a la sesión
+            // Create a New User and Associate it whit the Session
             var user = new User
             {
                 UserId = Guid.NewGuid().ToString(),
-                UserName = GenerateUserName(), // Generar nombre de usuario automáticamente
+                UserName = GenerateUserName(), // Generate UserName
                 Token = registerUserDto.Token,
                 TableId = GenerateTableId(registerUserDto.Token),
-                SessionId = session.SessionId // Asignar la sesión al usuario
+                SessionId = session.SessionId // Assign th Session
             };
 
             _context.Users.Add(user);
-            session.Users.Add(user); // Añadir el usuario a la sesión
+            session.Users.Add(user); // Add the User to the Session
             await _context.SaveChangesAsync();
 
-            // Crear la respuesta
+            // Create Response
             var response = new UserResponseDto
             {
                 Token = user.Token,
@@ -92,26 +92,37 @@ namespace WebAPI.Controller
                 TableId = user.TableId
             };
 
+            // Create Web Socket Message
+            var message = new WebSocketMessage
+            {
+                Type = "UserRegistred",
+                SessionId = session.SessionId,
+                Data = new
+                {
+                    UserId = user.UserId,
+                    UserName = user.UserName
+                }
+            };
+
+            await _webSocketService.BroadcastMessageToSessionAsync(session.SessionId, message);
             return CreatedAtAction(nameof(Register), new { id = response.UserId }, response);
         }
 
-        // Método auxiliar para generar un nombre de mesero
+        // Generate WiterName (Need Changes)
         private string GenerateWaiterName()
         {
-            // Implementar lógica para generar nombres de mesero
-            // Ejemplo sencillo:
             var randomNames = new List<string> { "Carlos", "Ana", "Luis", "Maria", "Jose" };
             var random = new Random();
             return randomNames[random.Next(randomNames.Count)];
         }
 
-        // Método auxiliar para generar un nombre de usuario
+        // Generate UserName
         private string GenerateUserName()
         {
             return "User_" + Guid.NewGuid().ToString("N").Substring(0, 8);
         }
 
-        // Método auxiliar para generar un TableId (Revisar por posible error)
+        // Generate TableId
         private string GenerateTableId(string token)
         {
 
@@ -129,7 +140,6 @@ namespace WebAPI.Controller
             int tableId = (Math.Abs(hash) % 20) + 1;
             return tableId.ToString();
         }
-
 
     }
 }

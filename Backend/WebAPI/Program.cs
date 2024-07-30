@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Net.WebSockets;
+using System.Text;
 using WebAPI.Data;
 using WebAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var sessions = new Dictionary<string, List<WebSocket>>();
 
 // Add services to the container.
 builder.Services.AddDbContext<OrderlyDbContext>(options =>
@@ -14,6 +17,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<WebSocketService>();
 
 var app = builder.Build();
 
@@ -73,7 +77,33 @@ async Task HandleWebSocketAsync(WebSocket webSocket)
 
     while (!result.CloseStatus.HasValue)
     {
-        await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+        var messageString = Encoding.UTF8.GetString(buffer, 0, result.Count);
+        var message = JsonConvert.DeserializeObject<WebSocketMessage>(messageString);
+
+        if (message.Type == "JoinSession")
+        {
+            if (!sessions.ContainsKey(message.SessionId))
+                sessions[message.SessionId] = new List<WebSocket>();
+
+            sessions[message.SessionId].Add(webSocket);
+        }
+
+        // Forward message to all users in the same session
+        if (sessions.TryGetValue(message.SessionId, out var webSockets))
+        {
+            foreach (var socket in webSockets)
+            {
+                if (socket != webSocket)
+                {
+                    await socket.SendAsync(
+                        new ArraySegment<byte>(buffer, 0, result.Count),
+                        result.MessageType,
+                        result.EndOfMessage,
+                        CancellationToken.None);
+                }
+            }
+        }
+
         result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
     }
 
