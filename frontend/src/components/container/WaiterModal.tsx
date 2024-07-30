@@ -46,7 +46,7 @@ export function WaiterModal() {
                 </Button>
                 <Button onClick={ () =>{ 
                   handleOpen()
-                  toast.custom((t) => 
+                  toast.custom((t: string | number) => 
                     (<SpecificNotifcation  
                         message="El servicio de mesa fue notificado" 
                         dismiss={t}
