@@ -35,7 +35,6 @@ namespace WebAPI.Controllers
                 return NotFound("Session not found");
             }
 
-            // Verifica si ya existe una factura para este usuario en la sesión
             var existingInvoice = await _context.Invoices
                 .FirstOrDefaultAsync(i => i.UserId == session.Users.First().UserId && i.SessionId == sessionId);
 
@@ -59,10 +58,26 @@ namespace WebAPI.Controllers
                 InvoiceStatus = "Pending"
             };
 
+            //  Web Socket Message Creation
+            var message = new WebSocketMessage
+            {
+                Type = "InvoiceCreated",
+                SessionId = invoice.SessionId,
+                Data = new
+                {
+                    InvoiceId = invoice.InvoiceId,
+                    SessionId = invoice.SessionId,
+                    UserId = invoice.UserId,
+                    TotalAmount = invoice.TotalAmount,
+                    CreatedDate = invoice.CreatedDate,
+                    InvoiceStatus = invoice.InvoiceStatus
+                }
+            };
+
             _context.Invoices.Add(invoice);
+            await _websocketService.BroadcastMessageToSessionAsync(invoice.SessionId, message);
             await _context.SaveChangesAsync();
 
-            // WebSocket notification logic...
 
             return CreatedAtAction(nameof(CreateInvoice), new { id = invoice.InvoiceId }, invoice);
         }
@@ -80,7 +95,6 @@ namespace WebAPI.Controllers
 
             invoice.TotalAmount = updatedInvoice.TotalAmount;
             invoice.InvoiceStatus = updatedInvoice.InvoiceStatus;
-            //invoice.PaymentMethod = updatedInvoice.PaymentMethod;
 
             //  Web Socket Message Creation
             var message = new WebSocketMessage
