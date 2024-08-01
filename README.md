@@ -23,7 +23,9 @@
 
 <!-- Video Section -->
 <div align='center'>
-    <iframe src="https://drive.google.com/file/d/1zBKj0GOXmGHiv0InUJ1pgqKQeLEOUypP/preview" width="640" height="480" allow="autoplay"></iframe>
+    <video id="Video Promocional" preload="auto" controls>
+    <source src="https://drive.google.com/file/d/1zBKj0GOXmGHiv0InUJ1pgqKQeLEOUypP/view?usp=sharing">
+</video>
 </div>
 <br>
 
