@@ -80,7 +80,7 @@
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/trello/trello-plain-wordmark.svg" alt="Logo" width="90" height="90" style="padding: 2rem;">   
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/slack/slack-original.svg" alt="Logo" width="60" height="60" style="padding: 2rem;">
 </div>
-<h1 style="margin-top: 2rem"> Equipo s15-13-ft-java-react - Team Members</h1>
+<h1 style="margin-top: 2rem"> Equipo s16-01-ft-csharp-react - Team Members</h1>
 <table align='center'>
   <tr>
     <td align='center'>
