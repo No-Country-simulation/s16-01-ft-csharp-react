@@ -1,4 +1,4 @@
-import { Order, User } from "../models/types";
+import { Order, Payment, User, UserId } from "../models/types";
 import { Auth, socket, useReceiveMessagesQuery, useSendMessageMutation } from "../store/socketSlice";
 import { useUserActions } from "./useUserActions";
 import { useUsersActions } from "./useUsersActions";
@@ -82,6 +82,47 @@ export const useSocketActions = () => {
     }
   }
 
+  const usePaymentsInit = async (proportion: 'divided' | 'all' | 'selected', peer_list: User[]) => {
+    const paymentsList = useReadTheShareContextToPay() || []
+    const new_peer_list = peer_list.map((peer: User) => ({ user_id: peer.user_id }))
+    const myPayment = paymentsList.find((value: Payment)=>{ value.user_id === myUser.user_id }) 
+    if(myPayment){
+      myPayment.proportion = proportion
+      myPayment.peer_list = new_peer_list 
+    } else if (!myPayment) {
+      paymentsList?.push({ user_id: myUser.user_id, proportion, peer_list: new_peer_list })
+    }
+    useSendAndStringify({paymentsList})
+  }
+
+  const usePaymentsCheck = (): boolean => {
+    const paymentsList = useReadTheShareContextToPay();
+    if (paymentsList) {
+      const seenUsers = new Set<UserId>(); // Set para rastrear user_ids
+      for (const payment of paymentsList) {
+        for (const peer of payment.peer_list) {
+          if (seenUsers.has({user_id: peer.user_id})) {
+            return false; // Duplicado encontrado
+          }
+          seenUsers.add({user_id: peer.user_id});
+        }
+      }
+    }
+    return true; // No se encontraron duplicados
+  }
+
+  const useReadTheShareContextToPay = () => {
+    if(messages){
+      const lastPaymentsList = messages.filter((msg: { message: string; clientOffset: number }) =>
+        msg.message.startsWith('{paymentsList:['))
+        .sort((a, b) => b.clientOffset - a.clientOffset)[0]?.message;
+        if (lastPaymentsList) {
+          const paymentsList: Payment[] = JSON.parse(lastPaymentsList).paymentsList;
+          return paymentsList || []
+        }
+    }
+  }
+
   const useReadTheShareContext = () => {
     if(messages){
       const lastUserList = messages.filter((msg: { message: string; clientOffset: number }) =>
@@ -107,6 +148,9 @@ export const useSocketActions = () => {
     useDeleteOrder,
     useRepeatOrder,
     useProcessingOrder,
-    useDeliveringOrder
+    useDeliveringOrder,
+    useReadTheShareContextToPay,
+    usePaymentsInit,
+    usePaymentsCheck
   }
 }

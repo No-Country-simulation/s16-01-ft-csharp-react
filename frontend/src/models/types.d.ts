@@ -11,6 +11,12 @@ export interface UserState {
     username: string,
     state: UserStateState,
     waiter_name: string,
+    invoice: Invoice
+}
+
+export interface Invoice {
+    invoice_id: string,
+    total_amount: number
 }
 
 export interface UserStateState {
@@ -51,6 +57,16 @@ export type CredentialsPreference = {
 export interface CredentialsExpense {
     selectedUsers: User[];
     paymentOption: 'divided' | 'all' | 'selected';
+}
+
+export interface Payment {
+    user_id: string,
+    proportion: 'divided' | 'all' | 'selected',
+    peer_list: UserId[]
+}
+
+export interface UserId {
+    user_id: string
 }
 
 export interface Item {

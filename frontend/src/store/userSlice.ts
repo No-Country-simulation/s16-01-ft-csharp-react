@@ -12,7 +12,11 @@ const DEFAULT_STATE: UserState = {
     message: '',
     timeout: 0
   },
-  waiter_name: ''
+  waiter_name: '',
+  invoice: {
+    invoice_id: '',
+    total_amount: 0
+  }
 }
 
 const expectedUserStateKeys = ['user_id', 'username', 'state', 'waiter_name'];

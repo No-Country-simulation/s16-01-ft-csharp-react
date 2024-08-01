@@ -34,28 +34,27 @@ export default function ProductPage() {
             <div>
               <div className="flex items-center justify-between">
                 <Typography variant="h5" color="black" className="font-normal">
-                  { item?.name }
+                  { item ? item.name : '' }
                 </Typography>
                 <Typography variant="h5" color="black" className="font-medium">
-                  $ { item?.price.toFixed(2) }
+                  $ { item ? item.price.toFixed(2) : '' }
                 </Typography>
               </div>
               <Typography 
                 variant="small" 
                 className="font-medium text-blue-gray-500">
-                  Para { item?.portion } persona(s)
+                  Para { item ? item.portion : '' } persona(s)
               </Typography>
             </div>
             <Typography
               variant="paragraph"
               className="font-normal pt-5 text-[#607D8B] "
-            >
-              { item?.description }
+            >{ item ? item.description : '' }
             </Typography>
             <div className="flex gap-4 pt-3">
               { item?.keywords.map((keyword, index) => (
                   <div key={index} className="flex items-center gap-[0.1rem]">
-                    <CheckBadge /><Typography variant="small" className="capitalize">{keyword}</Typography>
+                    <CheckBadge /><Typography variant="small" className="capitalize">{item ? keyword : ''}</Typography>
                   </div>
                 )) }
             </div>

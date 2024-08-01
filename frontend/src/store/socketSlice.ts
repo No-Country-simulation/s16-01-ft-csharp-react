@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { io } from 'socket.io-client';
+import { MAIN_API } from '../config/routes_api';
 
 export interface Event<Data> {
   name: string;
@@ -10,7 +11,7 @@ export interface Auth {
   serverOffset: number;
 }
 
-export const socket = io('http://localhost:3002', {
+export const socket = io(MAIN_API, {
   auth: {
     serverOffset: 0,
   },
