@@ -130,6 +130,7 @@ export const useSocketActions = () => {
         .sort((a, b) => b.clientOffset - a.clientOffset)[0]?.message;
         if (lastUserList) {
             const usersList: User[] = JSON.parse(lastUserList).usersList;
+            console.log(usersList)
             useSetUsers(usersList);
         }
     }
