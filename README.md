@@ -104,21 +104,17 @@
   </tr>
   </table>
   <table align='center'>
-<tr>
-<td align='center'>
+  <tr>
+    <td align='center'>
       <div >
         <h4 style="margin-top: 1rem;">Jacinto Gutierrez</br><small>Back-End</small></h4>
-        <div style='display: flex; flex-direction: column; padding-right: 2rem;'>
+        <div style='display: flex; flex-direction: column'>
         <a href="https://www.linkedin.com/in/jacinto-gutierrez-cantillo-software-developer/" target="_blank">
           <img style='width:8rem' src="https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white"/>
         </a>
         </div>
       </div>
     </td>
-</tr>
-</table>
-<table align='center'>
-  <tr>
     <td align='center'>
       <div >
         <h4 style="margin-top: 1rem;">Rogelio Olarte</br><small>Front-End</small></h4>
@@ -129,8 +125,8 @@
         </div>
       </div>
     </td>
-    </tr>
-</table>
+  </tr>
+  </table>
 
 <h1>Equipo - Team</h1>
 <div>Foto del equipo</div>
