@@ -69,18 +69,19 @@ export default function ExpenseForm(): JSX.Element {
         <List className='min-w-full'>
           {sortedUsers.map((user) => (
             <ListItem key={user.username} className='p-0'>
-              <label className='flex items-center'>
-                <ListItemPrefix>
+              <label className='flex items-center justify-between min-w-full'>
+                <ListItemPrefix className='mr-0'>
                   <Checkbox
                     crossOrigin="false"
                     checked={formik.values.selectedUsers.some(u => u.username === user.username)}
                     onChange={() => handleCheckboxChange(user)}
                     name={user.username}
+                    label={user.username}
                   />
                 </ListItemPrefix>
-                <Typography color='black'>
-                  {`${user.username} ${user.quantity_pay.toFixed(2)}`}
-                </Typography>
+                    <Typography variant='paragraph' color='black' className='pr-2'>
+                      $ {user.quantity_pay.toFixed(2)}
+                    </Typography>
               </label>
             </ListItem>
           ))}
@@ -89,7 +90,7 @@ export default function ExpenseForm(): JSX.Element {
       <Card className='min-w-full'>
         <List className='min-w-full'>
           <ListItem className='p-0'>
-            <label className='flex items-center'>
+            <label className='flex items-center justify-between min-w-full'>
               <ListItemPrefix>
                 <Checkbox
                   crossOrigin="false"
@@ -101,13 +102,13 @@ export default function ExpenseForm(): JSX.Element {
                   disabled={formik.values.selectedUsers.length > 0}
                 />
               </ListItemPrefix>
-              <Typography variant='paragraph' color='black' className='font-semibold'>
+              <Typography variant='paragraph' color='black' className='font-semibold pr-2'>
                 $ {dividedPayment().toFixed(2)}
               </Typography>
             </label>
           </ListItem>
           <ListItem className='p-0'>
-            <label className='flex items-center'>
+            <label className='flex items-center justify-between min-w-full'>
               <ListItemPrefix>
                 <Checkbox
                   crossOrigin="false"
@@ -119,7 +120,7 @@ export default function ExpenseForm(): JSX.Element {
                   disabled={formik.values.selectedUsers.length > 0}
                 />
               </ListItemPrefix>
-              <Typography variant='paragraph' color='black' className='font-semibold'>
+              <Typography variant='paragraph' color='black' className='font-semibold pr-2'>
                 $ {allPayment().toFixed(2)}
               </Typography>
             </label>
@@ -127,7 +128,14 @@ export default function ExpenseForm(): JSX.Element {
         </List>
       </Card>
       <div className="min-w-[90%] fixed bottom-[5.5rem] left-0 w-full z-40 px-5 bg-white pb-3">
-        <Button type="submit" variant="filled" color="black" fullWidth disabled={isSubmitDisabled}>GENERAR FACTURA</Button>
+        <Button type="submit" 
+          variant="filled" 
+          fullWidth 
+          disabled={isSubmitDisabled}
+          className="bg-[#787A00] h-[3rem] mb-3 disabled:bg-[gray]"
+        >
+          <Typography variant="h6">GENERAR FACTURA</Typography>
+        </Button>
       </div>
     </form>
   );

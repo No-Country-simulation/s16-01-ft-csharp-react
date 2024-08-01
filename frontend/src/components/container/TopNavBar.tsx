@@ -30,7 +30,7 @@ export default function TopNavBar() {
   }
 
   return (
-    <Navbar shadow={false} blurred={false} className='text-black bg-[#F3F3F3] flex items-center justify-between pl-4 pr-2 rounded-none min-w-full border-none max-h-[4.37rem] fixed top-0 left-0 w-full z-50'>
+    <Navbar shadow={false} blurred={false} className='text-black bg-[#F3F3F3] flex items-center justify-between px-4 rounded-none min-w-full border-none h-[4.37rem]  fixed top-0 left-0 w-full z-50'>
       { goToBack() }
       <WaiterModal />
     </Navbar>

@@ -5,7 +5,7 @@ import Ellipsis from "../../assets/Ellipsis";
 import Check from "../../assets/Check";
 import Trash from "../../assets/Trash";
 import ArrowPath from "../../assets/ArrowPath";
-import { useUsersActions } from "../../hooks/useUsersActions";
+import { useSocketActions } from "../../hooks/useSocketActions";
 
 interface BottomPerOrderProps {
     order_to_manage: Order,
@@ -13,12 +13,12 @@ interface BottomPerOrderProps {
 }
 
 export const  BottomPerOrder: React.FC<BottomPerOrderProps> = ({ order_to_manage, itsUser }) => {
-    const { myUser, useSetUserOrder, useSetUserOrderList } = useUsersActions()
+    const { useDeleteOrder, useRepeatOrder } = useSocketActions()
 
     const selectButton = () => {
         if(order_to_manage.order_status === 0){
             return (
-                <Button variant="outlined" color="orange" className="flex p-2 px-4 items-center rounded-[0.25rem]">
+                <Button variant="outlined" color="gray" className="flex p-2 px-4 items-center rounded-[0.25rem]">
                     <Clock />
                     <Typography variant="small" className="font-bold pl-1 text-[0.8rem]">PENDIENTE</Typography>
                 </Button>)
@@ -40,20 +40,11 @@ export const  BottomPerOrder: React.FC<BottomPerOrderProps> = ({ order_to_manage
     }
 
     const deleteOrder = (order_to_delete: Order) => {
-        if (order_to_delete.order_status === 0 && myUser.order_list) {
-            useSetUserOrderList([...myUser.order_list.filter((orderTo: Order) => (
-                orderTo.order_id !== order_to_delete.order_id
-            )).map(({ item_id, order_id, order_status }) =>
-                ({ user_id: myUser.user_id, order_id, item_id, order_status })) ])
-        }
+        useDeleteOrder(order_to_delete)
     }
 
     const repeatOrder = (order_to_repeat: Order) => {
-        if(order_to_repeat.order_status === 2 && myUser.order_list){
-            useSetUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
-                item_id: order_to_repeat.item_id, 
-                order_status: 0 })
-        }
+        useRepeatOrder(order_to_repeat)
     }
 
     const returnButton = () => {

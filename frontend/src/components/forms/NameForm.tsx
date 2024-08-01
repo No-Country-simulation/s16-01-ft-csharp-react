@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom"
 import * as Yup from 'yup'
 import { CredentialsUser } from "../../models/types.d"
 import { SpecificErrorMessage } from "../pure/SpecificErrorMessage"
-import { useUserActions } from "../../hooks/useUserActions"
-import { useUsersActions } from "../../hooks/useUsersActions"
+import { useSocketActions } from "../../hooks/useSocketActions"
 
 const loginSchema = Yup.object().shape({
     username: Yup.string().max(20, 'Máximo 20 caracteres')
@@ -17,8 +16,7 @@ const initialCredentials: CredentialsUser = {
 }
 
 export default function NameForm(): JSX.Element {
-    const { user, useSetUser } = useUserActions()
-    const { useSetUserSimple, myUser } = useUsersActions()
+    const { useRegister } = useSocketActions()
     const navigate = useNavigate()
     const handleSubmit = async (values: CredentialsUser, { setSubmitting }: FormikHelpers<CredentialsUser>) => {
         /* try {
@@ -29,8 +27,9 @@ export default function NameForm(): JSX.Element {
         } catch (error) {
           console.log(error)
         } */
-        useSetUserSimple({ user_id: '0', username: values.username, quantity_pay: myUser.quantity_pay })
-        useSetUser({...user, user_id: myUser.user_id, username: myUser.username})
+       /*  useSetUserSimple({ user_id: '0', username: values.username, quantity_pay: myUser.quantity_pay })
+        useSetUser({...user, user_id: myUser.user_id, username: myUser.username}) */
+        useRegister(values.username)
         setSubmitting(false)
         navigate('/preference')
     }
@@ -46,7 +45,7 @@ export default function NameForm(): JSX.Element {
                     <Form>
                         <Card className='' shadow={false} >
                             <CardBody className='p-0 ' >
-                                <Typography variant="h5" color="black" className="py-3 text-start">
+                                <Typography variant="h5" color="black" className="py-3 text-start font-normal">
                                     ¿Nos dirías tu nombre?
                                 </Typography>
                                     <Field name='username' >
@@ -75,8 +74,8 @@ export default function NameForm(): JSX.Element {
                                     )}
                             </CardBody>
                             <CardFooter className='flex flex-row justify-center space-x-2 p-0 pt-1 pb-20' >
-                                <Button type='submit' fullWidth color='black' className='py-3 px-10'>
-                                    CONTINUAR
+                                <Button type='submit' fullWidth className='h-[3rem] px-10 bg-[#787A00] shadow-none'>
+                                    <Typography variant="h6" >CONTINUAR</Typography> 
                                 </Button>
                             </CardFooter>
                         </Card>

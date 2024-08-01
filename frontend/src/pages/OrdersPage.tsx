@@ -16,7 +16,7 @@ export default function OrdersPage() {
   }, 0).toFixed(2);
 
   return (
-    <div className="min-h-full min-w-full flex flex-col items-center pt-[4.37rem] pb-[12rem]">
+    <div className="min-h-full min-w-full flex flex-col items-center pt-[4.37rem] pb-[13rem]">
       <div className="min-h-full min-w-[90%] flex flex-col overflow-y-scroll">
         <Typography variant="h6" className="font-bold pt-4 pb-1">Mis Pedidos</Typography>
         <div>

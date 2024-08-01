@@ -11,12 +11,13 @@ import {
     DEFAULT_USER
 } from '../store/usersSlice'
 import type { User, UserAndOrder, UserAndPreference, UserSimple } from '../models/types.d'
+import { useUserActions } from './useUserActions'
 
 export const useUsersActions = () => {
   const users: User[] = useAppSelector(state => state.users)
   const dispatch = useAppDispatch()
-  /* const { user } = useUserActions() */
-  const myUser: User = users.find((PerUser: User) => PerUser.user_id === '0' /* user.user_id */ ) || DEFAULT_USER
+  const { user } = useUserActions()
+  const myUser: User = users.find((PerUser: User) => PerUser.user_id === user.user_id /* user.user_id */ ) || DEFAULT_USER
 
   /**
    * This method set a User List in the Context

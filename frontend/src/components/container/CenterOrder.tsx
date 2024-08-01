@@ -1,20 +1,14 @@
 import { Button, Typography } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-import { Order } from "../../models/types.d";
-import { useUsersActions } from "../../hooks/useUsersActions";
 import { useUserActions } from "../../hooks/useUserActions";
+import { useSocketActions } from "../../hooks/useSocketActions";
 
 export default function CenterOrder() {
   const navigate = useNavigate()
   const { useSetUserStateState } = useUserActions()
-  const { myUser, useSetUserOrderList } = useUsersActions()
+  const { useProcessingOrder } = useSocketActions()
   const changeOrderToProcessing = () => {
-    if(myUser.order_list){
-      useSetUserOrderList(myUser.order_list.map((order: Order) => 
-        order.order_status === 0 ? { ...order, order_status: 1 } : order
-      ).map(({ item_id, order_id, order_status }) =>
-        ({ user_id: myUser.user_id, order_id, item_id, order_status })))
-    }
+    useProcessingOrder()
     useSetUserStateState({
       status: 3, 
       path: '', 
@@ -24,12 +18,14 @@ export default function CenterOrder() {
   }
 
   return (
-    <div className="flex place-content-between">
-        <Button variant="outlined" className="p-3" onClick={() => navigate('/menu')}>
-            <Typography variant="small" className="font-semibold">VOLVER A LA CARTA</Typography>
+    <div className="flex flex-row justify-center space-x-3 p-0 pt-10">
+        <Button variant="outlined" className="p-1 border-[#787A00] h-[3rem] " fullWidth
+          onClick={() => navigate('/menu')}>
+            <Typography variant="small" className="font-semibold  text-[#787A00]">VOLVER A LA CARTA</Typography>
         </Button>
-        <Button className="p-3" onClick={() => changeOrderToProcessing()}>
-            <Typography variant="small" className="font-semibold">ENVIAR A LA COCINA</Typography>
+        <Button className=" bg-[#787A00] h-[3rem] p-1" fullWidth
+          onClick={() => changeOrderToProcessing()}>
+            <Typography variant="small" className=" font-semibold  text-white">ENVIAR A LA COCINA</Typography>
         </Button>
     </div>
   )

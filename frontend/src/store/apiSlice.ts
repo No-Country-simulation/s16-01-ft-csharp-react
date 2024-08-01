@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { MAIN_API, ROUTE_LOGIN } from '../config/routes_api'
+import { MAIN_API, ROUTE_LOGIN, ROUTE_MENU } from '../config/routes_api'
 
 export const apiSlice = createApi({
   reducerPath: 'api',
@@ -17,7 +17,10 @@ export const apiSlice = createApi({
         body: data
       })
     }),
+    getItems: build.query({
+      query: () => MAIN_API.length !== 0 ? ROUTE_MENU : '/api/login',
+    }),
   })
 })
 
-export const {  } = apiSlice
+export const { useLoginMutation, useGetItemsQuery } = apiSlice

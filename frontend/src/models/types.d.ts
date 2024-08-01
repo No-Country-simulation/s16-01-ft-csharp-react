@@ -10,7 +10,7 @@ export interface UserState {
     user_id: string,
     username: string,
     state: UserStateState,
-    waiter_name: string
+    waiter_name: string,
 }
 
 export interface UserStateState {

@@ -8,7 +8,7 @@ export default function WaiterBox() {
     <div className="flex items-center gap-4">
         <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" />
         <div>
-          <Typography variant="h6">{ user.waiter_name || 'Asignando...' } </Typography>
+          <Typography variant="h6">{ user.waiter_name || 'Romina Alvarado' } </Typography>
           <Typography variant="small" color="gray" className="font-normal">
             Camarero(a)
           </Typography>

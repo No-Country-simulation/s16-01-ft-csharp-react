@@ -8,6 +8,7 @@ import Plus from "../../assets/Plus";
 import type { CredentialsPreference } from "../../models/types.d";
 import { useUsersActions } from "../../hooks/useUsersActions";
 import { useUserActions } from "../../hooks/useUserActions";
+import { useSocketActions } from "../../hooks/useSocketActions";
 
 interface PreferenceFormProps {
   father: string;
@@ -31,11 +32,12 @@ const restrictions = [
 
 export const PreferenceForm: React.FC<PreferenceFormProps> = ({ father, handleOpen }) => {
   const { user, useSetUserStateState } = useUserActions()
-  const { myUser, useSetUserPreferences } = useUsersActions()
+  const { myUser } = useUsersActions()
   const location = useLocation()
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const inputRef = useRef<HTMLDivElement>(null);
+  const { usePreference } = useSocketActions()
 
   const preferenceSchema = Yup.object().shape({
     preferences: Yup.array()
@@ -108,7 +110,7 @@ export const PreferenceForm: React.FC<PreferenceFormProps> = ({ father, handleOp
   };
 
   const handleSubmit = async (values: CredentialsPreference, { setSubmitting }: FormikHelpers<CredentialsPreference>) => {
-    useSetUserPreferences({ user_id: myUser.user_id, preferences: values.preferences })
+    usePreference(values.preferences)
     setSubmitting(false);
     if (father === 'modal' && handleOpen) {
       handleOpen();
@@ -118,6 +120,7 @@ export const PreferenceForm: React.FC<PreferenceFormProps> = ({ father, handleOp
   };
 
   const handleSkip = () => {
+    usePreference([])
     if (father === 'modal' && handleOpen) {
       handleOpen();
     } else if (location.pathname === '/preference' && father === 'page') {
@@ -196,17 +199,17 @@ export const PreferenceForm: React.FC<PreferenceFormProps> = ({ father, handleOp
                       onClose={() => handleRemovePreference(valor, setFieldValue, values.preferences)} 
                       animate={{ mount: { y: 0 }, unmount: { y: 20 } }}
                       size="sm"
-                      className="text-[0.6rem] capitalize"
+                      className="text-[0.875rem] capitalize bg-[#949A9D] text-white"
                     />
                   ))}
                 </div>
               </CardBody>
-              <CardFooter className='flex flex-row justify-center space-x-2 p-0 pt-10'>
-                <Button onClick={handleSkip} color='white' className='border-[0.1rem] border-black py-3 px-10'>
-                  {father === 'page' ? 'OMITIR' : 'CANCELAR'}
+              <CardFooter className='flex flex-row justify-center space-x-3 p-0 pt-10'>
+                <Button onClick={handleSkip} color='white' className='border-[0.1rem] border-[#787A00] text-[#787A00] h-[3rem]' fullWidth>
+                <Typography variant="h6" >{father === 'page' ? 'OMITIR' : 'CANCELAR'}</Typography> 
                 </Button>
-                <Button type='submit' color='black' className='py-3 px-10'>
-                  {father === 'page' ? 'CONTINUAR' : 'ACEPTAR'}
+                <Button type='submit' className='h-[3rem] bg-[#787A00] shadow-none' fullWidth >
+                <Typography variant="h6" >{father === 'page' ? 'CONTINUAR' : 'ACEPTAR'}</Typography> 
                 </Button>
               </CardFooter>
             </Card>

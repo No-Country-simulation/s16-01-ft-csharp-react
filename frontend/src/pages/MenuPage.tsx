@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useItemsActions } from "../hooks/useItemsActions";
-import { Button, Card, CardBody, CardFooter, Chip, Input, Tab, Tabs, TabsHeader, Typography } from "@material-tailwind/react";
+import { Card, CardBody, CardFooter, Chip, Input, Tab, Tabs, TabsHeader, Typography } from "@material-tailwind/react";
 import GlassButton from "../assets/GlassButton";
-import XMark from "../assets/XMark";
 import CheckBadge from "../assets/CheckBadge";
 import { Link } from "react-router-dom";
 import { PreferenceModal } from "../components/container/PreferenceModal";
@@ -10,17 +9,17 @@ import { useUsersActions } from "../hooks/useUsersActions";
 import { Item } from "../models/types";
 
 export const data = [
-  { value: "Platos", },
-  { value: "Entradas", },
-  { value: "Bebidas", },
-  { value: "Postres", },
+  { value: "platos", },
+  { value: "entradas", },
+  { value: "bebibles" },
+  { value: "postres", },
 ];
 
 export default function MenuPage() {
   const { items  } = useItemsActions()
   const { myUser, useSetUserPreferences } = useUsersActions()
   const [filter, setFilter] = useState<string>("");
-  const [category, setCategory] = useState<string>("Platos");
+  const [category, setCategory] = useState<string>("platos");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
@@ -53,39 +52,39 @@ export default function MenuPage() {
       </div>
       <div className="min-w-[90%] max-w-[90%] flex pt-4 gap-2 pb-6 overflow-x-scroll">
         {myUser.preferences.map((preference: string, index: number) => (
-          <Chip key={index} variant="outlined" 
-            icon={
-              <Button onClick={() => deletePreference(preference)} variant="text" className="p-0 rounded-none bg-white text-black">
-                <XMark />
-              </Button>
-          } value={preference} 
-            className="capitalize"
+          <Chip key={index} 
+            onClose={() => deletePreference(preference)}
+            value={preference} 
+            size="sm"
+            className="text-[0.875rem] capitalize bg-[#949A9D] text-white"
           />
         ))}
       </div>
-      <Tabs value={category} className="min-h-[4rem] min-w-full pl-[5%]">
-        <TabsHeader>
-          {data.map(({ value }) => (
-            <Tab key={value} value={value} className="min-h-[2.5rem]" onClick={() => setCategory(value)} >
+      <Tabs value={category} >
+        <TabsHeader className="max-h-[4rem] max-w-full px-[5%] overflow-x-scroll flex" >
+          {data.map(({ value }, index) => (
+            <Tab key={index} value={value} className="h-[2.5rem] min-w-fit px-2 mr-2 capitalize" onClick={() => setCategory(value)} >
               {value}
             </Tab>
           ))}
           </TabsHeader>
         </Tabs>
-      <div className="flex flex-col min-w-[90%] items-center place-content-center">
-        <div className="min-w-full flex flex-col gap-5">
+        
+      <div className="flex flex-col max-w-[90%] items-center place-content-center">
+        <Typography variant="h6" className="mt-5 self-start capitalize" >{ category } </Typography>
+        <div className="max-w-full flex flex-col gap-5">
           {getFilteredItems().map((item, index) => (
             <Card key={index} className="">
               <Link to={`/product/`.concat(item.item_id)} >
-              <CardBody className="pb-2">
+              <CardBody className="">
                 <div className="pb-3 flex justify-between">
                   <div className="">
-                    <Typography variant="h6" className="font-semibold text-black">{item.name}</Typography>
+                    <Typography variant="h5" className="text-black font-normal">{item.name}</Typography>
                     <Typography variant="small" className="font-medium text-blue-gray-500">Para {item.portion} persona(s)</Typography>
                   </div>
-                  <Typography variant="h5" className="text-black">$ {item.price.toFixed(2)}</Typography>
+                  <Typography variant="h5" className="text-black min-w-fit">{'$ ' + item.price.toFixed(2)}</Typography>
                 </div>
-                <Typography variant="small" className="text-[#607D8B]">{item.description}</Typography>
+                <Typography variant="paragraph" className="text-[#607D8B]">{item.description}</Typography>
               </CardBody>
               <CardFooter className="flex gap-4 pt-0">
                 {item.keywords.map((keyword, index) => (

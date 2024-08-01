@@ -4,6 +4,7 @@ import { useUserActions } from '../hooks/useUserActions'
 import routes from "../config/routes";
 import { useUsersActions } from "../hooks/useUsersActions";
 import { DEFAULT_PEER } from "../store/usersSlice";
+import EventComponent from "./EventComponent";
 
 export default function AboutPage() {
   const { useSetUserStateState, useResetUser } = useUserActions();
@@ -51,6 +52,7 @@ export default function AboutPage() {
         <h1>Rutas existentes:</h1>
         {renderRoutes(routes)}
       </div>
+      <EventComponent />
     </div>
   )
 }
