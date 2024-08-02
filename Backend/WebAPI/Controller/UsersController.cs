@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Dtos;
 using WebAPI.Models;
+using WebAPI.Services;
 
-namespace WebAPI.Controller
+namespace WebAPI.Controllers
 {
     [Route("api/")]
     [ApiController]
@@ -57,7 +58,7 @@ namespace WebAPI.Controller
             _context.Waiters.Add(waiter);
             await _context.SaveChangesAsync();
 
-            // Create a New Session and Add an Waiter
+            // Create a New Session and Add a Waiter
             if (session == null)
             {
                 session = new Session
@@ -70,14 +71,14 @@ namespace WebAPI.Controller
                 await _context.SaveChangesAsync();
             }
 
-            // Create a New User and Associate it whit the Session
+            // Create a New User and Associate it with the Session
             var user = new User
             {
                 UserId = Guid.NewGuid().ToString(),
-                UserName = GenerateUserName(), // Generate UserName
+                UserName = GenerateUserName(),
                 Token = registerUserDto.Token,
                 TableId = GenerateTableId(registerUserDto.Token),
-                SessionId = session.SessionId // Assign th Session
+                SessionId = session.SessionId // Assign the Session
             };
 
             _context.Users.Add(user);
@@ -92,10 +93,10 @@ namespace WebAPI.Controller
                 TableId = user.TableId
             };
 
-            // Create Web Socket Message
+            // Create WebSocket Message
             var message = new WebSocketMessage
             {
-                Type = "UserRegistred",
+                Type = "UserRegistered",
                 SessionId = session.SessionId,
                 Data = new
                 {
@@ -108,7 +109,7 @@ namespace WebAPI.Controller
             return CreatedAtAction(nameof(Register), new { id = response.UserId }, response);
         }
 
-        // Generate WiterName (Need Changes)
+        // Generate WaiterName
         private string GenerateWaiterName()
         {
             var randomNames = new List<string> { "Carlos", "Ana", "Luis", "Maria", "Jose" };
@@ -125,7 +126,6 @@ namespace WebAPI.Controller
         // Generate TableId
         private string GenerateTableId(string token)
         {
-
             var session = _context.Sessions
                 .Include(s => s.Users)
                 .FirstOrDefaultAsync(s => s.Token == token)
@@ -140,6 +140,5 @@ namespace WebAPI.Controller
             int tableId = (Math.Abs(hash) % 20) + 1;
             return tableId.ToString();
         }
-
     }
 }

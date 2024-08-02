@@ -4,16 +4,17 @@ using System.Net.WebSockets;
 using System.Text;
 using WebAPI.Data;
 using WebAPI.Models;
+using WebAPI.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
-var sessions = new Dictionary<string, List<WebSocket>>();
+
 
 // Add services to the container.
 builder.Services.AddDbContext<OrderlyDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -57,8 +58,8 @@ app.Use(async (context, next) =>
     if (context.WebSockets.IsWebSocketRequest)
     {
         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-        // Handle the WebSocket
-        await HandleWebSocketAsync(webSocket);
+        var webSocketService = context.RequestServices.GetRequiredService<WebSocketService>();
+        await HandleWebSocketAsync(webSocketService, webSocket);
     }
     else
     {
@@ -70,10 +71,12 @@ app.MapControllers();
 
 app.Run();
 
-async Task HandleWebSocketAsync(WebSocket webSocket)
+async Task HandleWebSocketAsync(WebSocketService webSocketService, WebSocket webSocket)
 {
     var buffer = new byte[1024 * 4];
     WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+    string sessionId = null; // Variable para almacenar el sessionId cuando se une
 
     while (!result.CloseStatus.HasValue)
     {
@@ -82,30 +85,22 @@ async Task HandleWebSocketAsync(WebSocket webSocket)
 
         if (message.Type == "JoinSession")
         {
-            if (!sessions.ContainsKey(message.SessionId))
-                sessions[message.SessionId] = new List<WebSocket>();
-
-            sessions[message.SessionId].Add(webSocket);
+            sessionId = message.SessionId;
+            await webSocketService.AddSocketAsync(webSocket, sessionId);
         }
 
         // Forward message to all users in the same session
-        if (sessions.TryGetValue(message.SessionId, out var webSockets))
+        if (sessionId != null)
         {
-            foreach (var socket in webSockets)
-            {
-                if (socket != webSocket)
-                {
-                    await socket.SendAsync(
-                        new ArraySegment<byte>(buffer, 0, result.Count),
-                        result.MessageType,
-                        result.EndOfMessage,
-                        CancellationToken.None);
-                }
-            }
+            await webSocketService.BroadcastMessageToSessionAsync(sessionId, message);
         }
 
         result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
     }
 
+    if (sessionId != null)
+    {
+        await webSocketService.RemoveSocketAsync(sessionId, webSocket); // Asegúrate de pasar ambos parámetros
+    }
     await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
 }

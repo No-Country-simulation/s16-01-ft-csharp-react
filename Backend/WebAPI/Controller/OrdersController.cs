@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.Data;
 using WebAPI.Dtos;
 using WebAPI.Models;
+using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
@@ -50,27 +51,34 @@ namespace WebAPI.Controllers
                 return NotFound("Item not found.");
             }
 
-            var order = new Order
-            {
-                OrderId = Guid.NewGuid().ToString(),
-                UserId = user.UserId,
-                UserName = user.UserName,
-                OrderStatus = OrderStatus.Pending.ToString(),
-                OrderItems = new List<OrderItem>
-                {
-                    new OrderItem
-                    {
-                        OrderItemId = Guid.NewGuid().ToString(),
-                        ItemId = item.ItemId,
-                        IsReady = false // Initially not Ready
-                    }
-                }
-            };
+            var order = await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.UserId == user.UserId && o.OrderStatus == OrderStatus.Pending.ToString());
 
-            _context.Orders.Add(order);
+            if (order == null)
+            {
+                order = new Order
+                {
+                    OrderId = Guid.NewGuid().ToString(),
+                    UserId = user.UserId,
+                    UserName = user.UserName,
+                    OrderStatus = OrderStatus.Pending.ToString(),
+                    OrderItems = new List<OrderItem>()
+                };
+                _context.Orders.Add(order);
+            }
+
+            var orderItem = new OrderItem
+            {
+                OrderItemId = Guid.NewGuid().ToString(),
+                ItemId = item.ItemId,
+                IsReady = false // Initially not Ready
+            };
+            order.OrderItems.Add(orderItem);
+
             await _context.SaveChangesAsync();
 
-            //  Create the Response
+            // Create the Response
             var response = new OrderResponseDto
             {
                 OrderId = order.OrderId,
@@ -85,7 +93,7 @@ namespace WebAPI.Controllers
             // Create the Message for WebSocket
             var message = new WebSocketMessage
             {
-                Type = "OrderCreated",
+                Type = "OrderUpdated",
                 SessionId = session.SessionId,
                 Data = new
                 {
@@ -123,3 +131,4 @@ namespace WebAPI.Controllers
         }
     }
 }
+
