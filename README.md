@@ -1,10 +1,9 @@
 <!-- Header Section -->
 <div align='center'>
     <a href="" target="_blank">
-        <img width="200" height="200" src="logo.png" alt="Banner">
+        <img width="200" height="200" src="https://raw.githubusercontent.com/rogelioolarte/s16-01-ft-csharp-react/main/logo.png" alt="Banner">
     </a>
     <h3>Orderly - Good phrase... </h3>
-    <h3>Buena frase...</h3>
 </div>
 
 <!-- Links Section -->
@@ -47,7 +46,7 @@
 
 <div>
     <h1>Industria o Rubro - Industry</h1>
-    <p>Gastronomía</p>
+    <p>Technology and Information</p>
 </div>
 
 <h1>Tecnologias Usadas - Used technologies</h1>
@@ -68,11 +67,11 @@
 
 <h3>Back-End</h3>
 
-![.NET](https://img.shields.io/badge/-%2523ED8B00.svg?style=for-the-badge&logo=dotnet&logoColor=black&color=white)
+![.NET]([https://img.shields.io/badge/-%2523ED8B00.svg?style=for-the-badge&logo=dotnet&logoColor=black&color=white](https://img.shields.io/badge/-%2523ED8B00.svg?style=for-the-badge&logo=dotnet&logoColor=white&color=purple))
 
 <h3>Base de datos</h3>
 
-![MySQL](https://img.shields.io/static/v1?style=for-the-badge&message=MySQL&color=4169E1&logo=MySQL&logoColor=FFFFFF&label=)
+![MySQL](https://img.shields.io/static/v1?style=for-the-badge&message=SQLite&color=4169E1&logo=SQLite&logoColor=FFFFFF&label=)
 
 <!-- Organización -->
 <h1>Herramientas de Organización - Organization Tools</h1>
