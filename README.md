@@ -1,7 +1,7 @@
 <!-- Header Section -->
 <div align='center'>
     <a href="" target="_blank">
-        <img width="200" height="200" src="https://raw.githubusercontent.com/rogelioolarte/s16-01-ft-csharp-react/main/logo.png" alt="Banner">
+        <img height="200" src="https://raw.githubusercontent.com/rogelioolarte/s16-01-ft-csharp-react/main/logo.png" alt="Banner">
     </a>
     <h3>Orderly - Good phrase... </h3>
 </div>
