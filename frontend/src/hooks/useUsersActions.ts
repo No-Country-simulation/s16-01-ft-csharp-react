@@ -17,7 +17,7 @@ export const useUsersActions = () => {
   const users: User[] = useAppSelector(state => state.users)
   const dispatch = useAppDispatch()
   const { user } = useUserActions()
-  const myUser: User = users.find((PerUser: User) => PerUser.user_id === user.user_id /* user.user_id */ ) || DEFAULT_USER
+  const myUser: User = users.find((PerUser: User) => PerUser.user_id === user.user_id) || DEFAULT_USER
 
   /**
    * This method set a User List in the Context

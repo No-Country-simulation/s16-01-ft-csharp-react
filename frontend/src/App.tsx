@@ -4,15 +4,19 @@ import FullScreenModal from './components/container/FullScreenModal'
 import { Toaster } from 'sonner'
 import { useEffect } from 'react'
 import { useSocketActions } from './hooks/useSocketActions'
-import { useUsersActions } from './hooks/useUsersActions'
+import { useReceiveMessagesQuery } from './store/socketSlice'
 
 function App() {
-  const { useSendAndStringify } = useSocketActions()
-  const { users } = useUsersActions()
+  const { useReadTheShareContext } = useSocketActions()
+  const { data: messages } = useReceiveMessagesQuery();
+
+  /* useEffect(()=>{
+    useSendAndStringify()
+  }, [users]) */
 
   useEffect(()=>{
-    useSendAndStringify({usersList:users})
-  }, [users])
+    useReadTheShareContext()
+  }, [messages])
 
   return (
     <div className='min-h-screen min-w-screen'>
