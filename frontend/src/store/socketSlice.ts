@@ -16,7 +16,7 @@ export const socket = io(MAIN_API, {
     serverOffset: 0,
   },
   transports: ['websocket'],
-  ackTimeout: 5000,
+  ackTimeout: 2000,
   retries: 3,
 });
 

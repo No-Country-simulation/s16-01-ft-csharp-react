@@ -20,6 +20,16 @@ export const useSocketActions = () => {
   const myUser: User = users.find((PerUser: User) => PerUser.user_id === user.user_id /* user.user_id */ ) || DEFAULT_USER
   const dispatch = useAppDispatch()
 
+  const checkUserId = () => {
+    if(users.length > 0 && user.user_id === ""){
+      return users.length.toString()
+    } else if (user.user_id !== "") {
+      return user.user_id
+    } else {
+      return '0'
+    }
+  }
+
   const useRegister = async (name: string) => {
     useReadTheShareContext()
     dispatch(setUser({...user, 
@@ -34,6 +44,7 @@ export const useSocketActions = () => {
   const usePreference = async (preferences: string[]) => {
     useReadTheShareContext()
     dispatch(setUserPreferences({ user_id: user.user_id, preferences}))
+    useSendAndStringify()
   }
 
   const useCreateOrder = async (item_id: string) => {
@@ -42,6 +53,7 @@ export const useSocketActions = () => {
       dispatch(setUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
         item_id: item_id, order_status: 0 }))
     }
+    useSendAndStringify()
   }
 
   const useDeleteOrder = async (order: Order) => {
@@ -58,8 +70,7 @@ export const useSocketActions = () => {
     useReadTheShareContext()
     if(order.order_status === 2 && myUser.order_list){
       dispatch(setUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
-          item_id: order.item_id, 
-          order_status: 0 }))
+          item_id: order.item_id, order_status: 0 }))
     }
   }
 
@@ -96,7 +107,7 @@ export const useSocketActions = () => {
     } else if (!myPayment) {
       paymentsList?.push({ user_id: myUser.user_id, proportion, peer_list: new_peer_list })
     }
-    useSendAndStringify({paymentsList})
+    useSendAndStringifyToPay({paymentsList})
   }
 
   const usePaymentsCheck = (): boolean => {
@@ -118,7 +129,7 @@ export const useSocketActions = () => {
   const useReadTheShareContextToPay = () => {
     if(messages){
       const lastPaymentsList = messages.filter((msg: { message: string; clientOffset: number }) =>
-        msg.message.startsWith('{paymentsList:['))
+        msg.message.startsWith('{"paymentsList:['))
         .sort((a, b) => b.clientOffset - a.clientOffset)[0]?.message;
         if (lastPaymentsList) {
           const paymentsList: Payment[] = JSON.parse(lastPaymentsList).paymentsList;
@@ -130,7 +141,7 @@ export const useSocketActions = () => {
   const useReadTheShareContext = () => {
     if(messages){
       const lastUserList = messages.filter((msg: { message: string; clientOffset: number }) =>
-        msg.message.startsWith('{usersList:['))
+        msg.message.startsWith('{"usersList":[{'))
         .sort((a, b) => b.clientOffset - a.clientOffset)[0]?.message;
         if (lastUserList) {
             const usersList: User[] = JSON.parse(lastUserList).usersList;
@@ -139,8 +150,15 @@ export const useSocketActions = () => {
     }
   }
 
-  const useSendAndStringify = (object: any) => {
+  const useSendAndStringifyToPay = (object: any) => {
     sendMessage({ message: JSON.stringify(object), clientOffset: (socket.auth as Auth).serverOffset })
+  }
+
+  const useSendAndStringify = () => {
+    sendMessage({ message: JSON.stringify({usersList:users}), clientOffset: (socket.auth as Auth).serverOffset })
+    .unwrap()
+    .then(response => console.log('Message sent successfully:', response))
+    .catch(error => console.error('Error sending message:', error));
   }
 
   return {

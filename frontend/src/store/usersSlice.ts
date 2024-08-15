@@ -47,9 +47,11 @@ export const usersSlice = createSlice({
       const { user_id, username, quantity_pay } = action.payload;
       const userIndex = state.findIndex(user => user.user_id === user_id);
       if (userIndex !== -1) {
-        state[userIndex] = { ...state[userIndex], username, quantity_pay };
+        return state.map((user: User)=>
+          user.user_id === user_id ? { ...user, username, quantity_pay  } : user
+        )
       } else {
-        state.push({ user_id, username, quantity_pay, preferences: [], order_list: [] });
+        return [...state, { user_id, username, quantity_pay , preferences: [], order_list: []}]
       }
     },
     setUserSimpleList: (state: User[], action: PayloadAction<UserSimple[]>) => {
@@ -65,13 +67,13 @@ export const usersSlice = createSlice({
         user.user_id === action.payload.user_id
           ? { ...user, preferences: action.payload.preferences }
           : user
-      );
+      )
     },
     setUserPreferencesList: (state: User[], action: PayloadAction<UserAndPreference[]>) => {
       return state.map(user => {
         const update = action.payload.find(u => u.user_id === user.user_id);
         return update ? { ...user, preferences: update.preferences } : user;
-      });
+      })
     },
     setUserOrder: (state: User[], action: PayloadAction<UserAndOrder>) => {
       return state.map(user => {
