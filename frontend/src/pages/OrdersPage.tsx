@@ -44,7 +44,7 @@ export default function OrdersPage() {
       ))}
 
       <div className="min-w-[90%] bottom-[5.5rem] w-full p-5 bg-green">
-        <Button onClick={() => useResetUser()} >Reset Account and Go to About Page</Button>
+        <Button onClick={() => useResetUser()} >Reset Account and Go to Register Page</Button>
       </div>
       
       <div className="min-w-[90%] fixed bottom-[5.5rem] left-0 w-full z-40 px-5 bg-white">

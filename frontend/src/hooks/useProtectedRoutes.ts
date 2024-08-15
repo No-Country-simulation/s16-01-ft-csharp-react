@@ -20,7 +20,7 @@ export default function useProtectedRoutes() {
     if (user.username && isExternRoute) {
       navigate('/home');
     } else if (!user.username && isInternRoute) {
-      navigate('/about');
+      navigate('/register');
     }
   }, [user, location.pathname, navigate]);
 }
