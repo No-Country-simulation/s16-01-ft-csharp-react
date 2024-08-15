@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from './store'
 import {
     setUsers,
-    resetUsers,
     setUserSimple,
     setUserSimpleList,
     setUserPreferences,
@@ -31,7 +30,7 @@ export const useUsersActions = () => {
    * This method reset the User List
    */
   const useResetUsers = () => {
-    dispatch(resetUsers())
+    dispatch(setUsers(users.filter(value => value.user_id !== myUser.user_id)))
   }
 
   const useSetUserSimple = (data: UserSimple) => {
