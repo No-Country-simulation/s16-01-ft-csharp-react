@@ -5,6 +5,7 @@ import { Toaster } from 'sonner'
 import { useEffect } from 'react'
 import { useSocketActions } from './hooks/useSocketActions'
 import { useUsersActions } from './hooks/useUsersActions'
+import useProtectedRoutes from './hooks/useProtectedRoutes'
 
 function App() {
   const { useSendAndStringify } = useSocketActions()
@@ -13,6 +14,8 @@ function App() {
   useEffect(()=>{
     useSendAndStringify({usersList:users})
   }, [users])
+
+  useProtectedRoutes()
 
   return (
     <div className='min-h-screen min-w-screen'>

@@ -1,6 +1,8 @@
 import { useAppDispatch, useAppSelector } from './store'
 import { resetUser, setUser, setUserState,  } from '../store/userSlice'
 import type { UserState, UserStateState } from '../models/types.d'
+import { resetItems } from '../store/itemsSlice'
+import { resetUsers } from '../store/usersSlice'
 
 export const useUserActions = () => {
   const user: UserState = useAppSelector(state => state.user)
@@ -26,7 +28,10 @@ export const useUserActions = () => {
    * This method reset the User State
    */
   const useResetUser = () => {
+    dispatch(resetItems())
+    dispatch(resetUsers())
     dispatch(resetUser())
+    
   }
 
   return { useResetUser, useSetUser, useSetUserStateState, user }

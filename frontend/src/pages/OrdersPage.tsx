@@ -1,4 +1,4 @@
-import { Card, Typography } from "@material-tailwind/react";
+import { Button, Card, Typography } from "@material-tailwind/react";
 import { Item, Order, User } from "../models/types.d";
 import { useItemsActions } from "../hooks/useItemsActions";
 import { BottomPerOrder } from "../components/container/BottomPerOrder";
@@ -6,10 +6,12 @@ import { TopPerOrder } from "../components/container/TopPerOrder";
 import CenterOrder from "../components/container/CenterOrder";
 import CloseOrders from "../components/container/CloseOrders";
 import { useUsersActions } from "../hooks/useUsersActions";
+import { useUserActions } from "../hooks/useUserActions";
 
 export default function OrdersPage() {
   const { items } = useItemsActions(); 
   const { users, myUser } = useUsersActions()
+  const { useResetUser } = useUserActions()
   const totalOrderPrice = myUser.order_list?.reduce((total: number, order: Order) => {
     const item = items.find((item: Item) => item.item_id === order.item_id);
     return total + (item ? item.price : 0);
@@ -40,6 +42,11 @@ export default function OrdersPage() {
           )) : '' }
         </div>
       ))}
+
+      <div className="min-w-[90%] bottom-[5.5rem] w-full p-5 bg-green">
+        <Button onClick={() => useResetUser()} >Reset Account and Go to About Page</Button>
+      </div>
+      
       <div className="min-w-[90%] fixed bottom-[5.5rem] left-0 w-full z-40 px-5 bg-white">
         <div className="flex place-content-between">
           <Typography variant="h6" className="font-bold pt-4 pb-1">Total de mis pedidos</Typography>

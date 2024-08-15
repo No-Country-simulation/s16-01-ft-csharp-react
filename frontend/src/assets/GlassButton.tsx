@@ -5,7 +5,7 @@ export default function GlassButton() {
     <Button
             size="sm"
             color="black"
-            className="!absolute right-1 top-1 rounded h-[2rem] w-[2.625rem] flex items-center justify-center"
+            className="!absolute right-1 top-1 rounded h-[2rem] w-[2.625rem] flex items-center justify-center bg-[#787A00]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

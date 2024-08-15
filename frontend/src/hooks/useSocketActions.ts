@@ -1,71 +1,75 @@
-import { Order, Payment, User, UserId } from "../models/types";
+import { Order, Payment, User, UserId, UserState } from "../models/types";
 import { Auth, socket, useReceiveMessagesQuery, useSendMessageMutation } from "../store/socketSlice";
-import { useUserActions } from "./useUserActions";
-import { useUsersActions } from "./useUsersActions";
+import { setUser } from '../store/userSlice'
+import { useAppDispatch, useAppSelector } from "./store";
+import { DEFAULT_USER } from "../store/usersSlice";
+import {
+  setUsers,
+  setUserSimple,
+  setUserPreferences,
+  setUserOrder,
+  setUserOrderList,
+} from '../store/usersSlice'
 
 export const useSocketActions = () => {
 
   const [sendMessage] = useSendMessageMutation();
   const { data: messages } = useReceiveMessagesQuery();
-  const { users, myUser, 
-    useSetUserSimple, 
-    useSetUsers,
-    useSetUserPreferences,
-    useSetUserOrder,
-    useSetUserOrderList
-  } = useUsersActions()
-  const { user, useSetUser } = useUserActions() 
+  const user: UserState = useAppSelector(state => state.user)
+  const users: User[] = useAppSelector(state => state.users);
+  const myUser: User = users.find((PerUser: User) => PerUser.user_id === user.user_id /* user.user_id */ ) || DEFAULT_USER
+  const dispatch = useAppDispatch()
 
   const useRegister = async (name: string) => {
     useReadTheShareContext()
-    useSetUser({...user, 
+    dispatch(setUser({...user, 
       user_id: user.user_id ? users.length !== 0 ? users.length.toString() : '0' : '0', 
-      username: name})
-    useSetUserSimple({ 
+      username: name}))
+    dispatch(setUserSimple({ 
       user_id: (users.length !== 0 ? users.length : 0).toString(), 
       username: name, 
-        quantity_pay: myUser.quantity_pay })
+        quantity_pay: myUser.quantity_pay }))
   }
 
   const usePreference = async (preferences: string[]) => {
     useReadTheShareContext()
-    useSetUserPreferences({ user_id: user.user_id, preferences})
+    dispatch(setUserPreferences({ user_id: user.user_id, preferences}))
   }
 
   const useCreateOrder = async (item_id: string) => {
     useReadTheShareContext()
     if(item_id !== '' && myUser.order_list ){
-      useSetUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
-        item_id: item_id, order_status: 0 })
+      dispatch(setUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
+        item_id: item_id, order_status: 0 }))
     }
   }
 
   const useDeleteOrder = async (order: Order) => {
     useReadTheShareContext()
     if (order.order_status === 0 && myUser.order_list) {
-      useSetUserOrderList([...myUser.order_list.filter((orderTo: Order) => (
+      dispatch(setUserOrderList([...myUser.order_list.filter((orderTo: Order) => (
         orderTo.order_id !== order.order_id))
         .map(({ item_id, order_id, order_status }) =>
-        ({ user_id: myUser.user_id, order_id, item_id, order_status })) ])
+        ({ user_id: myUser.user_id, order_id, item_id, order_status })) ]))
     }
   }
 
   const useRepeatOrder = async (order: Order) => {
     useReadTheShareContext()
     if(order.order_status === 2 && myUser.order_list){
-      useSetUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
+      dispatch(setUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
           item_id: order.item_id, 
-          order_status: 0 })
+          order_status: 0 }))
     }
   }
 
   const useProcessingOrder = async () => {
     useReadTheShareContext()
     if(myUser.order_list){
-      useSetUserOrderList(myUser.order_list.map((order: Order) => 
+      dispatch(setUserOrderList(myUser.order_list.map((order: Order) => 
         order.order_status === 0 ? { ...order, order_status: 1 } : order
       ).map(({ item_id, order_id, order_status }) =>
-        ({ user_id: myUser.user_id, order_id, item_id, order_status })))
+        ({ user_id: myUser.user_id, order_id, item_id, order_status }))))
     }
   }
 
@@ -73,11 +77,11 @@ export const useSocketActions = () => {
     useReadTheShareContext()
     if(myUser.order_list) {
       if((myUser.order_list.every((order: Order) => 
-          order.order_status === 1 || order.order_status === 2))){
-        useSetUserOrderList(myUser.order_list.map(({item_id, order_id, order_status}) =>
+        order.order_status === 1 || order.order_status === 2))){
+        dispatch(setUserOrderList(myUser.order_list.map(({item_id, order_id, order_status}) =>
           order_status === 1 ? { user_id: myUser.user_id, order_id, item_id, order_status: 2 } : 
-            { user_id: myUser.user_id, order_id, item_id, order_status }
-        ))
+          { user_id: myUser.user_id, order_id, item_id, order_status }
+        )))
       }
     }
   }
@@ -130,8 +134,7 @@ export const useSocketActions = () => {
         .sort((a, b) => b.clientOffset - a.clientOffset)[0]?.message;
         if (lastUserList) {
             const usersList: User[] = JSON.parse(lastUserList).usersList;
-            console.log(usersList)
-            useSetUsers(usersList);
+            dispatch(setUsers(usersList))
         }
     }
   }
