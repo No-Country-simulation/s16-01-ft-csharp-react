@@ -1,7 +1,6 @@
 import { Button } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { useUserActions } from '../hooks/useUserActions'
-import routes from "../config/routes";
 import { useUsersActions } from "../hooks/useUsersActions";
 import { DEFAULT_PEER } from "../store/usersSlice";
 import EventComponent from "./EventComponent";
@@ -9,25 +8,6 @@ import EventComponent from "./EventComponent";
 export default function AboutPage() {
   const { useSetUserStateState, useResetUser } = useUserActions();
   const { useResetUsers, users, useSetUsers } = useUsersActions()
-
-  const checkRoutePath = (route: string) => {
-    return route.replace(/\//g, '').replace(/:id/g, '/2')
-  }
-  
-  const renderRoutes = (routes: any, parentPath = "") => {
-    return routes.map((route: any, index: number) => {
-        const fullPath = `${parentPath}${route.path}`;
-        return (
-            <div key={index} className="ml-4">
-                <Link to={'/'.concat(checkRoutePath(fullPath))}>
-                  <div className="text-blue-600 p-0">{fullPath}</div>
-                </Link>
-                
-                {route.children && renderRoutes(route.children, fullPath)}
-            </div>
-        );
-    });
-  };
 
   return (
     <div>
@@ -48,10 +28,6 @@ export default function AboutPage() {
         status: 4, path: '/invoice', parameter: '', message: 'Hola, probando', timeout: 2500 })}>Open Modal Logo</Button>
       <Button onClick={() => useSetUserStateState({
         status: 2, path: '/product', parameter: '/3', message: '', timeout: 0 })}>Open Product 3</Button>
-      <div>
-        <h1>Rutas existentes:</h1>
-        {renderRoutes(routes)}
-      </div>
       <EventComponent />
     </div>
   )

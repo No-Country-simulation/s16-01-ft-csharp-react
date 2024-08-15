@@ -19,7 +19,7 @@ const routes = [
     path: '/',
     element: <App />,
     children: [
-      { path: '/', element: <Navigate to='/about' /> },
+      { path: '/', element: <Navigate to='/register' /> },
       { path: '/',element: <Appp />, children: [
         { path: '/home', element: <HomePage /> },
         { path: '/menu', element: <MenuPage /> },

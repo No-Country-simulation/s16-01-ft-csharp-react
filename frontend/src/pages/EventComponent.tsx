@@ -12,6 +12,7 @@ const EventComponent: React.FC = () => {
 
   return (
     <div>
+      <h1>Websocket history</h1>
       <ul>
         {messages?.map((msg, index) => (
           <li key={index}>{msg.message} (ID: {msg.clientOffset})</li>

@@ -4,7 +4,8 @@ import FullScreenModal from './components/container/FullScreenModal'
 import { Toaster } from 'sonner'
 import { useEffect } from 'react'
 import { useSocketActions } from './hooks/useSocketActions'
-import { useReceiveMessagesQuery } from './store/socketSlice'
+import { useUsersActions } from './hooks/useUsersActions'
+import useProtectedRoutes from './hooks/useProtectedRoutes'
 
 function App() {
   const { useReadTheShareContext } = useSocketActions()
@@ -17,6 +18,8 @@ function App() {
   useEffect(()=>{
     useReadTheShareContext()
   }, [messages])
+
+  useProtectedRoutes()
 
   return (
     <div className='min-h-screen min-w-screen'>
