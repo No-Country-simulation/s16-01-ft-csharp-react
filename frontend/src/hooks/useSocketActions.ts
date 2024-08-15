@@ -17,7 +17,7 @@ export const useSocketActions = () => {
   const { data: messages } = useReceiveMessagesQuery();
   const user: UserState = useAppSelector(state => state.user)
   const users: User[] = useAppSelector(state => state.users);
-  const myUser: User = users.find((PerUser: User) => PerUser.user_id === user.user_id /* user.user_id */ ) || DEFAULT_USER
+  const myUser: User = users.find((PerUser: User) => PerUser.user_id === user.user_id) || DEFAULT_USER
   const dispatch = useAppDispatch()
 
 
@@ -59,7 +59,7 @@ export const useSocketActions = () => {
     useReadTheShareContext()
     if(order.order_status === 2 && myUser.order_list){
       dispatch(setUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
-          item_id: order.item_id, order_status: 0 }))
+        item_id: order.item_id, order_status: 0 }))
     }
   }
 

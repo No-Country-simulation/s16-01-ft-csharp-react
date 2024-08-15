@@ -20,7 +20,6 @@ export const DEFAULT_PEER: User = {
     item_id: "5",
     order_status: 2
   }]
-  
 };
 
 const DEFAULT_STATE: User[] = [];
