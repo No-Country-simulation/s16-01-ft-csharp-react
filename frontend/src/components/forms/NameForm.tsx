@@ -19,16 +19,6 @@ export default function NameForm(): JSX.Element {
     const { useRegister } = useSocketActions()
     const navigate = useNavigate()
     const handleSubmit = async (values: CredentialsUser, { setSubmitting }: FormikHelpers<CredentialsUser>) => {
-        /* try {
-          const res = await login(values).unwrap()
-          if (res) {
-            navigate('/dashboard')
-          }
-        } catch (error) {
-          console.log(error)
-        } */
-       /*  useSetUserSimple({ user_id: '0', username: values.username, quantity_pay: myUser.quantity_pay })
-        useSetUser({...user, user_id: myUser.user_id, username: myUser.username}) */
         useRegister(values.username)
         setSubmitting(false)
         navigate('/preference')

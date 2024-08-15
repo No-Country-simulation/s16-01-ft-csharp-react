@@ -11,7 +11,7 @@ function App() {
   const { useSendAndStringify } = useSocketActions()
   const { users } = useUsersActions()
 
-  useEffect(()=>{
+  useEffect(( ) => {
     useSendAndStringify({usersList:users})
   }, [users])
 
