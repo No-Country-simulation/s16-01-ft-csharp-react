@@ -20,15 +20,6 @@ export const useSocketActions = () => {
   const myUser: User = users.find((PerUser: User) => PerUser.user_id === user.user_id /* user.user_id */ ) || DEFAULT_USER
   const dispatch = useAppDispatch()
 
-  const checkUserId = () => {
-    if(users.length > 0 && user.user_id === ""){
-      return users.length.toString()
-    } else if (user.user_id !== "") {
-      return user.user_id
-    } else {
-      return '0'
-    }
-  }
 
   const useRegister = async (name: string) => {
     useReadTheShareContext()
@@ -44,7 +35,6 @@ export const useSocketActions = () => {
   const usePreference = async (preferences: string[]) => {
     useReadTheShareContext()
     dispatch(setUserPreferences({ user_id: user.user_id, preferences}))
-    useSendAndStringify()
   }
 
   const useCreateOrder = async (item_id: string) => {
@@ -53,7 +43,6 @@ export const useSocketActions = () => {
       dispatch(setUserOrder({ user_id: myUser.user_id, order_id: myUser.order_list.length.toString(), 
         item_id: item_id, order_status: 0 }))
     }
-    useSendAndStringify()
   }
 
   const useDeleteOrder = async (order: Order) => {
@@ -154,11 +143,8 @@ export const useSocketActions = () => {
     sendMessage({ message: JSON.stringify(object), clientOffset: (socket.auth as Auth).serverOffset })
   }
 
-  const useSendAndStringify = () => {
-    sendMessage({ message: JSON.stringify({usersList:users}), clientOffset: (socket.auth as Auth).serverOffset })
-    .unwrap()
-    .then(response => console.log('Message sent successfully:', response))
-    .catch(error => console.error('Error sending message:', error));
+  const useSendAndStringify = (object: any) => {
+    sendMessage({ message: JSON.stringify(object), clientOffset: (socket.auth as Auth).serverOffset })
   }
 
   return {

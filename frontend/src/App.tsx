@@ -8,12 +8,8 @@ import { useUsersActions } from './hooks/useUsersActions'
 import useProtectedRoutes from './hooks/useProtectedRoutes'
 
 function App() {
-  const { useReadTheShareContext } = useSocketActions()
-  const { data: messages } = useReceiveMessagesQuery();
-
-  /* useEffect(()=>{
-    useSendAndStringify()
-  }, [users]) */
+  const { users } = useUsersActions()
+  const { useSendAndStringify } = useSocketActions()
 
   useEffect(( ) => {
     useSendAndStringify({usersList:users})
